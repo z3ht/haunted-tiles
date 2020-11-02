@@ -31,7 +31,7 @@ Add these env variables so everything can be run
 
 ## Competition Info
 
-Tyler has build a web based game from scratch called Haunted Tiles and they are excited to host a competition for 
+Tyler has built a web based game from scratch called Haunted Tiles and they are excited to host a competition for 
 students across the nation to compete in.
 
 ### Register
