@@ -16,7 +16,7 @@ API executes on port `8421`. Ensure no other processes are using this port on th
 `build.py` builds and runs the codebase (the server runs this automatically once a minute)  
 
 `setup.sh` automatically sets up an environment  
-&nbsp;&nbsp;&nbsp;&nbsp;Adds environment variables to secrets.env; Add secrets with extreme caution
+&nbsp;&nbsp;&nbsp;&nbsp;Adds environment variables to secrets.env; Secrets should be added with extreme caution
 <br />
 
 ## Environment Variables
@@ -25,11 +25,7 @@ Add these env variables so everything can be run
 `HAUNTED_TILES_TARGET` → Haunted Tiles server target (testing: `localhost` or production: `haunted-tiles.xyz`)
 
 [//]: # (TODO: remove secret key when repo goes public)
-`HAUNTED_TILES_API_KEY` → Haunted Tiles secret key (set to: `ep1c-Passw0rD`) 
-
-`GITHUB_USER` → Github username (optional)
-
-`GITHUB_PASS` → Github password (optional; do not add on a public pc)
+`HAUNTED_TILES_API_KEY` → Haunted Tiles secret key (set to: `ep1c-Passw0rD`)
 
 <br />
 
