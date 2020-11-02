@@ -5,7 +5,7 @@
 Tyler Technologies Coding Competition Fall 2020
 
 ### Structure:
-API executes on port `8421`. Ensure no other processes are using this port on the host machine.
+The Haunted Tiles API executes on port `8421`. Ensure no other processes are using this port on the host machine.
 
 `web` contains frontend code (executed by the client)
 
@@ -17,7 +17,7 @@ API executes on port `8421`. Ensure no other processes are using this port on th
 
 `build.py` builds and runs the codebase (the server runs this automatically)
 
-`setup.sh` automatically sets up an environment  
+`setup.sh` automatically sets up a development environment  
 - Environment variables are added to .env
 <br />
 
