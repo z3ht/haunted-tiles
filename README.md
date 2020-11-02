@@ -9,7 +9,7 @@ Tyler Technologies Coding Competition Fall 2020
 
 `src` contains backend code (executed by the server)
 
-`build.sh` should be executed after finishing code (the server runs this automatically once a minute)
+`build.sh` executes code (the server runs this automatically once a minute) [add this to your run configuration]
 
 `setup.sh` automatically sets up environment
 
