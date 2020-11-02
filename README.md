@@ -24,10 +24,7 @@ The Haunted Tiles API executes on port `8421`. Ensure no other processes are usi
 ## Environment Variables
 Add these env variables so everything can be run
 
-`HAUNTED_TILES_TARGET` → Haunted Tiles server target (testing: `localhost` or production: `haunted-tiles.xyz`)
-
-[//]: # (TODO: remove secret key when repo goes public)
-`HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-Passw0rD`)
+`HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-t0ken`)
 
 <br />
 
