@@ -10,13 +10,15 @@ API executes on port `8421`. Ensure no other processes are using this port on th
 `web` contains frontend code (executed by the client)
 
 `api` contains api code (executed by the server)  
-&nbsp;&nbsp;&nbsp;&nbsp;- All API endpoints should be located in `api/haunted_tiles.py` and point to relevant logic
-(see endpoint `/` for an example)
+- All API endpoints should be located in `api/haunted_tiles.py` and point to relevant logic
+(for an example, see endpoint `/`)
+- Please abide by the [microservices](https://microservices.io/patterns/microservices.html) design patterns
+- `GET` requests should **never** change state
 
-`build.py` builds and runs the codebase (the server runs this automatically once a minute)  
+`build.py` builds and runs the codebase (the server runs this automatically)
 
 `setup.sh` automatically sets up an environment  
-&nbsp;&nbsp;&nbsp;&nbsp;Adds environment variables to secrets.env; Secrets should be added with extreme caution
+- Environment variables are added to .env
 <br />
 
 ## Environment Variables
@@ -25,7 +27,7 @@ Add these env variables so everything can be run
 `HAUNTED_TILES_TARGET` → Haunted Tiles server target (testing: `localhost` or production: `haunted-tiles.xyz`)
 
 [//]: # (TODO: remove secret key when repo goes public)
-`HAUNTED_TILES_API_KEY` → Haunted Tiles secret key (set to: `ep1c-Passw0rD`)
+`HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-Passw0rD`)
 
 <br />
 

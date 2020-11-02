@@ -1,7 +1,7 @@
 #!/usr/bin/python
-import os
-
 from api.haunted_tiles import begin_app
+from dotenv import load_dotenv
 
-os.system("source ./secrets.env")
+load_dotenv(verbose=True)
+
 begin_app()
