@@ -5,7 +5,7 @@
 Tyler Technologies Coding Competition Fall 2020
 
 ### Structure:
-`charlottes_web` contains all the frontend code (executed by the client)
+`web` contains all the frontend code (executed by the client)
 
 `src` contains backend code (executed by the server)
 
