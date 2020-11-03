@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+chmod 755 ./prod_setup.sh
+
 adduser hauntedtiles
 usermod -aG sudo hauntedtiles
 su - hauntedtiles
