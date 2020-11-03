@@ -10,7 +10,6 @@ Ensure all of the below requirements are satisfied before attempting to setup an
 - `node` for executing client code  (client)
     - `node-fetch` for making HTTP requests
 - `python3` for running Python code  (development and production)
-- The Haunted Tiles API executes on port `8421`; ensure no other processes are using this port (development and production)
 - Environment Variables [`setup` will take care of this] (development and production) :
     - `HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-t0ken`)
 - `systemd` host (production)
@@ -34,7 +33,7 @@ environment:
 - Run `setup/prod_setup.sh`
     - This script assumes the server name is `haunted-tiles.xyz`
 - Launch the Gunicorn application server by running `sudo systemctl <action> hauntedtiles`
-- Access on port `8421`
+- Access on port `80`
 
 <br />
 
