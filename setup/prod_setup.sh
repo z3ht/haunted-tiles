@@ -1,5 +1,3 @@
-python3 -m pip install gunicorn
-
 adduser hauntedtiles
 usermod -aG sudo hauntedtiles
 su - hauntedtiles
@@ -15,9 +13,11 @@ cd ~/haunted-tiles
 python3 -m venv venv
 source venv/bin/activate
 
+python3 -m pip install gunicorn wheel
+
 cd setup
-sudo ln -s ./config/systemd/hauntedtiles.service /etc/systemd/system
-sudo ln -s ./config/nginx/hauntedtiles /etc/nginx/sites-enabled
+sudo ln -s ~/haunted-tiles/setup/config/systemd/hauntedtiles.service /etc/systemd/system
+sudo ln -s ~/haunted-tiles/setup/config/nginx/hauntedtiles /etc/nginx/sites-enabled
 
 sudo nginx -t
 
