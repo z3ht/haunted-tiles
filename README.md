@@ -14,6 +14,7 @@ The Haunted Tiles API executes on port `8421`. Ensure no other processes are usi
 (for an example, see endpoint `/`)
 - Please abide by the [microservices](https://microservices.io/patterns/microservices.html) design patterns
 - `GET` requests should **never** change state
+- `api/haunted_tiles.py` should never exceed 200 lines of code
 
 `build.py` builds and runs the codebase (the server runs this automatically)
 
