@@ -32,6 +32,7 @@ by reverse-proxy Nginx on port `8421`. Certbot takes care of the ssl certificate
 environment:
 - Create+Activate a Python venv called `venv`
 - Run `setup/prod_setup.sh`
+    - This script assumes the server name is `haunted-tiles.xyz`
 - Launch the Gunicorn application server by running `sudo systemctl <action> hauntedtiles`
 - Access on port `8421`
 
