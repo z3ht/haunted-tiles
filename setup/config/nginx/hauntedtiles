@@ -1,5 +1,5 @@
 server {
-    listen 8421;
+    listen 80;
     server_name haunted-tiles.xyz;
 
     location / {
