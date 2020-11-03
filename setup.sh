@@ -2,7 +2,7 @@
 
 # This script could definitely be improved but I think it is good enough for our needs
 
-python -m pip install flask cryptography python-dotenv
+python3 -m pip install flask cryptography python-dotenv
 
 chmod 755 ./build.py
 chmod 755 ./setup.sh
