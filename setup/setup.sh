@@ -8,4 +8,4 @@ python3 -m pip install flask python-dotenv cryptography
 chmod 755 ../deploy.sh
 chmod 755 ./setup.sh
 
-echo -e "HAUNTED_TILES_API_TOKEN=\c" && read -r && [ ! -z "$REPLY" ] && echo "export HAUNTED_TILES_API_TOKEN=$REPLY" >> ./.env
+echo -e "HAUNTED_TILES_API_TOKEN=\c" && read -r && [ ! -z "$REPLY" ] && echo "export HAUNTED_TILES_API_TOKEN=$REPLY" >> ../.env
