@@ -8,4 +8,4 @@ chmod 755 ./build.py
 chmod 755 ./setup.sh
 
 echo "export FLASK_ENV=development" > ./.env
-echo -e "$HAUNTED_TILES_API_TOKEN=\c" && read -r && [ ! -z "$REPLY" ] && echo "export $HAUNTED_TILES_API_TOKEN=$REPLY" >> ./.env
+echo -e "HAUNTED_TILES_API_TOKEN=\c" && read -r && [ ! -z "$REPLY" ] && echo "export HAUNTED_TILES_API_TOKEN=$REPLY" >> ./.env
