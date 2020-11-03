@@ -4,6 +4,3 @@ venv
 __pycache__
 node_modules
 package-lock.json
-server.crt
-server.csr
-server.key

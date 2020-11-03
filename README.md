@@ -2,10 +2,42 @@
 
 ![galaxy-brain](https://www.dailydot.com/wp-content/uploads/db4/41/6e8734dfe00c1b1d-768x384.jpg)
 
-Tyler Technologies Coding Competition Fall 2020
+Tyler Technologies Coding Competition Fall 2020  
+Team: **¯\_(ツ)_/¯**
 
-### Structure:
-The Haunted Tiles API executes on port `8421`. Ensure no other processes are using this port on the host machine.
+## Usage:
+Ensure all of the below requirements are satisfied before attempting to setup an environment:
+- `node` for executing client code  (client)
+    - `node-fetch` for making HTTP requests
+- `python3` for running Python code  (development and production)
+- The Haunted Tiles API executes on port `8421`; ensure no other processes are using this port (development and production)
+- Environment Variables [`setup` will take care of this] (development and production) :
+    - `HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-t0ken`)
+- `systemd` host (production)
+- `certbot` for ssl certificate signing (production)
+- `nginx` reverse proxy (production)
+
+<br />
+
+**Client**: Run `haunted-tiles.js`. Configure the target server by changing the `baseUrl` variable
+
+**Development Server**:
+- [*recommended*] Create+Activate a Python venv called `venv`
+- Run `setup/setup.sh` 
+- Launch the Flask api by running `api/haunted_tiles.py`
+- Access on port `8421`
+
+**Production Server**: The production environment is a Gunicorn application server that hosts a Flask API served 
+by reverse-proxy Nginx on port `8421`. Certbot takes care of the ssl certificate signing. Follow the below instructions to initialize a production 
+environment:
+- Create+Activate a Python venv called `venv`
+- Run `setup/prod_setup.sh`
+- Launch the Gunicorn application server by running `sudo systemctl <action> hauntedtiles`
+- Access on port `8421`
+
+<br />
+
+## Structure:
 
 `web` contains frontend code (executed by the client)
 
@@ -14,29 +46,13 @@ The Haunted Tiles API executes on port `8421`. Ensure no other processes are usi
 (for an example, see endpoint `/`)
 - Please abide by the [microservices](https://microservices.io/patterns/microservices.html) design patterns
 - `GET` requests should **never** change state
-- `api/haunted_tiles.py` should never exceed 200 lines of code
+- `api/haunted_tiles.py` should never exceed 150 lines of code
 
-`build.py` builds and runs the codebase (the server runs this automatically)
+`setup` contains all necessary setup scripts and configurations
 
-`setup.sh` automatically sets up a development environment  
-- Environment variables are added to .env
-<br />
-
-## Requirements
-`openssl` for ssl certificate signing
-`python3` for running python code
-`node` for running frontend code
-- `fetch` for making HTTP requests
+`deploy.sh` automatically deploys code to the server (run after stable releases only)
 
 <br />
-
-## Environment Variables
-Add these env variables so everything can be run
-
-`HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-t0ken`)
-
-<br />
-
 
 ## Competition Info
 

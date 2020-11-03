@@ -1,18 +1,11 @@
-import functools
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort
 from api.examples import hello_world
+from dotenv import load_dotenv
+from api.utils import return_json
 
 
-def return_json(f):
-    @functools.wraps(f)
-    def inner(**kwargs):
-        return jsonify(f(**kwargs))
-
-    return inner
-
-
-# NEVER import app in other files
+load_dotenv(verbose=True)
 app = Flask(__name__)
 
 
@@ -29,9 +22,6 @@ def index():
     return hello_world()
 
 
-def begin_app():
-    app.run(ssl_context=("./server.crt", "./server.key"), host="0.0.0.0", port=8421, debug=True)
-
-
 if __name__ == "__main__":
-    begin_app()
+    os.environ["FLASK_ENV"] = "development"
+    app.run(ssl_context="adhoc", port=8421, debug=True)

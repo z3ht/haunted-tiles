@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve Haunted Tiles
+After=network.target
+
+[Service]
+User=hauntedtiles
+Group=www-data
+WorkingDirectory=/home/hauntedtiles/haunted-tiles
+Environment="PATH=/home/hauntedtiles/haunted-tiles/venv/bin"
+ExecStart=/home/hauntedtiles/haunted-tiles/venv/bin/gunicorn --workers 3 --bind unix:hauntedtiles.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

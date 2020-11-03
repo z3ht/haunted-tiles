@@ -1,0 +1,9 @@
+server {
+    listen 8421;
+    server_name haunted-tiles.xyz;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/hauntedtiles/haunted-tiles/hauntedtiles.sock;
+    }
+}
