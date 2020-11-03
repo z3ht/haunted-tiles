@@ -30,7 +30,7 @@ def index():
 
 
 def begin_app():
-    app.run(ssl_context='adhoc', host="0.0.0.0", port=8421, debug=True)
+    app.run(ssl_context=("./server.crt", "./server.key"), host="0.0.0.0", port=8421, debug=True)
 
 
 if __name__ == "__main__":

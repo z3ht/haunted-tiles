@@ -22,6 +22,14 @@ The Haunted Tiles API executes on port `8421`. Ensure no other processes are usi
 - Environment variables are added to .env
 <br />
 
+## Requirements
+`openssl` for ssl certificate signing
+`python3` for running python code
+`node` for running frontend code
+- `fetch` for making HTTP requests
+
+<br />
+
 ## Environment Variables
 Add these env variables so everything can be run
 
