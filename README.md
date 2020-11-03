@@ -29,7 +29,6 @@ Ensure all of the below requirements are satisfied before attempting to setup an
 **Production Server**: The production environment is a Gunicorn application server that hosts a Flask API served 
 by reverse-proxy Nginx on port `80`. Certbot takes care of the ssl certificate signing. Follow the below instructions to initialize a production 
 environment:
-- Create+Activate a Python venv called `venv`
 - Run `setup/prod_setup.sh`
     - This script assumes the server name is `haunted-tiles.xyz`
 - Launch the Gunicorn application server by running `sudo systemctl <action> hauntedtiles`
