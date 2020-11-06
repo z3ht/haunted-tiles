@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.before_request
 def verify_header():
     # Prevents other teams from stealing our algorithm. The front end code must contain the api-token.
-    if "Api-Token" not in request.headers or request.headers["Api-Token"] != os.getenv("HAUNTED_TILES_API_TOKEN"):
+    if "Api-Token" not in request.args or request.args["Api-Token"] != os.getenv("HAUNTED_TILES_API_TOKEN"):
         abort(401)
 
 
