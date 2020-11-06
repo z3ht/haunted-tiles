@@ -3,7 +3,7 @@
 ssh root@haunted-tiles.xyz  << EOF
   su - hauntedtiles
   cd ~/haunted-tiles
-  sudo systemctl stop hauntedtiles
+  echo "ubuntu_sucks" | sudo -S systemctl stop hauntedtiles
   git pull
   sudo systemctl start hauntedtiles
 EOF
