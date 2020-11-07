@@ -32,10 +32,6 @@ const apiToken = "ep1c-t0ken";
 const strategy = "basic";
 let gameId = undefined;
 
-getContent("https://haunted-tiles.xyz/?Api-Token=ep1c-t0ken")
-  .then((html) => console.log(html))
-  .catch((err) => console.error(err));
-
 function main(gameState, side){
   const start_date = Date.now();
 
