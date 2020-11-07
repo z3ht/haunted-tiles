@@ -1,0 +1,46 @@
+<form [formGroup]="teamForm">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Team Name</mat-label>
+            <input matInput type="text" formControlName="teamName">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>School Name</mat-label>
+            <input matInput type="text" formControlName="schoolName">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Monster#1</mat-label>
+            <mat-select formControlName="monsterChoice1">
+                <mat-option *ngFor="let monster of monsters" [value]='monster'>
+                    {{monster}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Monster#2</mat-label>
+            <mat-select formControlName="monsterChoice2">
+                <mat-option *ngFor="let monster of monsters" [value]='monster'>
+                    {{monster}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Script</mat-label>
+            <textarea matInput #script cdkTextareaAutosize placeholder="Ex. Url or raw text"
+                formControlName="script"></textarea>
+            <mat-hint align="end">{{script.value.length}}</mat-hint>
+        </mat-form-field>
+    </div>
+    <div style="justify-content: flex-end; display: flex;">
+        <button mat-raised-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button  color="primary" (click)="onSubmit()" [disabled]="!teamForm.valid">Submit</button>
+    </div>
+</form>

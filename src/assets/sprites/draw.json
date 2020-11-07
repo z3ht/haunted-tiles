@@ -1,0 +1,41 @@
+{
+  "textures": [
+    {
+      "image": "draw.png",
+      "format": "RGBA8888",
+      "size": {
+        "w": 317,
+        "h": 72
+      },
+      "scale": 1,
+      "frames": [
+        {
+          "filename": "1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 317,
+						"h": 72
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 317,
+						"h": 72
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 317,
+						"h": 72
+					},
+					"anchor": {
+						"x": 0,
+						"y": 0
+					}
+
+        }
+      ]
+    }
+  ]
+}

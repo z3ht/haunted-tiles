@@ -1,0 +1,16 @@
+<mat-toolbar class="game-toolbar" color="primary">
+  <button mat-icon-button aria-label="Sidenav toggle" (click)=openSidenav()>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span> Tyler Code Competition</span>
+  <div class="right">
+    <span>Are you looking for a full time job or internship? Positions are open across the country!</span>
+    <a class="apply-button" mat-raised-button href="https://www.tylertech.com/careers/job-openings" target="_blank">APPLY</a>
+  </div>
+</mat-toolbar>
+<mat-drawer-container class="sidenav-container">
+  <mat-drawer mode="side" [(opened)] = "opened"><app-navigation></app-navigation></mat-drawer>
+  <mat-drawer-content class="sidenav-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

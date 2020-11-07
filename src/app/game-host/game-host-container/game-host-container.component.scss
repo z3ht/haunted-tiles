@@ -1,0 +1,36 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.game {
+  flex: 1 1 auto;
+}
+
+.flex-grid {
+  display: flex;
+  justify-content: space-between;
+}
+.flex-grid .main-col {
+  width: 75%;
+}
+
+.flex-grid .col {
+  width: 25%;
+}
+
+mat-card {
+  margin-bottom: 16px;
+}
+
+button{
+  margin-left: 16px;
+}
+
+.example-icon {
+  padding: 0 14px;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}

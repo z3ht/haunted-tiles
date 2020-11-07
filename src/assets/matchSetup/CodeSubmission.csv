@@ -1,0 +1,4 @@
+﻿ID,Start time,Completion time,Email,Name,Team Name,School,Home Monster Choice,Away Monster Choice,URL/Code
+1,9/29/20 14:50:15,9/29/20 14:50:48,anonymous,,Wander Team,Tyler Technologies,grouchy,triclops,https://raw.githubusercontent.com/SarahPerson/DropperAIs/master/wander.ai.ts
+1,9/29/20 14:50:15,9/29/20 14:50:48,anonymous,,Tile Status Team,Tyler Technologies,bobo,goldy,https://raw.githubusercontent.com/SarahPerson/DropperAIs/master/tile-status.ai.ts
+1,9/29/20 14:50:15,9/29/20 14:50:48,anonymous,,Invalid Code,Some Bad School,goldy,bobo,this is code that is intentionally wrong and will error out

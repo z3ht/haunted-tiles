@@ -1,0 +1,104 @@
+{
+  "textures": [
+    {
+      "image": "broom.png",
+      "format": "RGBA8888",
+      "size": {
+        "w": 616,
+        "h": 70
+      },
+      "scale": 1,
+      "frames": [
+        {
+          "filename": "broom-1.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 152,
+            "h": 70
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 152,
+            "h": 70
+          },
+          "frame": {
+            "x": 2,
+            "y": 1,
+            "w": 152,
+            "h": 70
+          }
+        },
+        {
+          "filename": "broom-2.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 152,
+            "h": 70
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 152,
+            "h": 70
+          },
+          "frame": {
+            "x": 157,
+            "y": 1,
+            "w": 152,
+            "h": 70
+          }
+        },
+        {
+          "filename": "broom-3.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 152,
+            "h": 70
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 152,
+            "h": 70
+          },
+          "frame": {
+            "x": 310.785,
+            "y": 3,
+            "w": 152,
+            "h": 70
+          }
+        },
+        {
+          "filename": "broom-4.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 152,
+            "h": 70
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 152,
+            "h": 70
+          },
+          "frame": {
+            "x": 461.570,
+            "y": 5,
+            "w": 152,
+            "h": 70
+          }
+        }
+      ]
+    }
+  ],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:6dbea843ac4b56d14e56376112f6636b:d7336b954800aa059c7d21c269122124:accbe1e7e294ded8391337fc1c446319$"
+	}
+}

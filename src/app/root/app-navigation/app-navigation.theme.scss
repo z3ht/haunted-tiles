@@ -1,0 +1,9 @@
+@import "~@angular/material/theming";
+
+@mixin app-navigation-theme($theme) {
+  $accent: map-get($theme, accent);
+
+  .nav-active {
+    color: mat-color($accent, darker) !important;
+  }
+}

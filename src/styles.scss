@@ -1,0 +1,80 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$dropper-primary: mat-palette($mat-indigo, A100, A200, A400);
+$dropper-accent: mat-palette($mat-orange, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$dropper-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$dropper-theme: mat-dark-theme((
+  color: (
+    primary: $dropper-primary,
+    accent: $dropper-accent,
+    warn: $dropper-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($dropper-theme);
+
+@import './app/root/app-navigation/app-navigation.theme.scss';
+@import './app/root/app-root/app-root.theme.scss';
+@include app-root-theme($dropper-theme);
+@include app-navigation-theme($dropper-theme);
+
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
+@import '~codemirror/addon/fold/foldgutter.css';
+@import '~codemirror/addon/lint/lint.css';
+@import '~codemirror/theme/darcula';
+
+
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.CodeMirror {
+  /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: 100%;
+  color: black;
+  direction: ltr;
+}
+
+.CodeMirror-lint-tooltip {
+  background-color: #ffd;
+  border: 1px solid black;
+  border-radius: 4px 4px 4px 4px;
+  color: black;
+  font-family: monospace;
+  font-size: 10pt;
+  overflow: hidden;
+  padding: 2px 5px;
+  position: fixed;
+  white-space: pre;
+  white-space: pre-wrap;
+  z-index: 1000000000;
+  max-width: 600px;
+  opacity: 0;
+  transition: opacity .4s;
+  -moz-transition: opacity .4s;
+  -webkit-transition: opacity .4s;
+  -o-transition: opacity .4s;
+  -ms-transition: opacity .4s;
+}

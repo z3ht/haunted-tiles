@@ -1,0 +1,6 @@
+@import '../app/root/app-navigation/app-navigation.theme.scss';
+
+@mixin custom-components-theme($theme) {
+  @include app-navigation-theme($theme);
+}
+

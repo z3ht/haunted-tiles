@@ -1,0 +1,23 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.sidenav-container {
+  flex: 1 1 auto;
+}
+
+.sidenav-content {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.apply-button {
+  margin-left: 15px;
+}

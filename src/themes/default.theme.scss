@@ -1,0 +1,26 @@
+@import '~@angular/material/theming';
+@import './custom-components.theme.scss';
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$default-primary: mat-palette($mat-indigo);
+$default-accent: mat-palette($mat-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$default-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$default-theme: mat-light-theme((
+  color: (
+    primary: $default-primary,
+    accent: $default-accent,
+    warn: $default-warn,
+  )
+));
+
+.default-theme {
+  @include angular-material-theme($default-theme);
+  @include custom-components-theme($default-theme);
+}

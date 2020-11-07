@@ -1,0 +1,26 @@
+<div style="height: 100%;" id="codeEditorForm">
+    <form [formGroup]="simpleRunForm" (ngSubmit)="onStart()">
+        <div>
+            <mat-form-field class="full-width">
+                <mat-label>Away Team Configuration</mat-label>
+                <mat-select [compareWith]='compareConfigs' formControlName="awayTeamConfig">
+                    <mat-option *ngFor="let config of getTeamConfigs()" [value]='config'>
+                        {{config.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div id="editor">
+            <ngx-codemirror formControlName="script" (change)="onScriptChange()" [options]=codeMirrorOptions>
+            </ngx-codemirror>
+        </div>
+        <div style="justify-content: flex-end; display: flex;">
+            <button (click)='downloadScript()' title="Download" mat-raised-button aria-label="Download">
+                <mat-icon>get_app</mat-icon>
+                Download
+            </button>
+            <button mat-raised-button mat-dialog-close color="primary" type="submit"
+                [disabled]="!simpleRunForm.valid">Run</button>
+        </div>
+    </form>
+</div>

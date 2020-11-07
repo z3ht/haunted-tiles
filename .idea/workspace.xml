@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8d987fbc-8efe-45c0-841c-c686f8879a61" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="package.json" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="984b1329-8799-41e2-88ed-b364d47b2207" />
+  <component name="ProjectId" id="1ji33TESOqjwbz5yU7L0Fq501IM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="15.0.1" />
+    <property name="javascript.nodejs.core.library.typings.version" value="14.14.6" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/setup/config/systemd" />
+      <recent name="$PROJECT_DIR$/setup/config/nginx" />
+      <recent name="$PROJECT_DIR$/setup/config" />
+      <recent name="$PROJECT_DIR$/setup" />
+      <recent name="$PROJECT_DIR$/haunted_tiles" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.haunted_tiles">
+    <configuration name="haunted-tiles.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/web/haunted-tiles.js" working-dir="$PROJECT_DIR$/web">
+      <method v="2" />
+    </configuration>
+    <configuration name="haunted_tiles" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="haunted-tiles" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/api" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/api/haunted_tiles.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="build.sh" type="ShConfigurationType" temporary="true">
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/build.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/usr/bin/zsh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="deploy.sh" type="ShConfigurationType" temporary="true">
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/deploy.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/usr/bin/zsh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="setup.sh" type="ShConfigurationType" temporary="true">
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/setup/setup.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/usr/bin/zsh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.haunted_tiles" />
+      <item itemvalue="Shell Script.build.sh" />
+      <item itemvalue="Shell Script.deploy.sh" />
+      <item itemvalue="Shell Script.setup.sh" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Shell Script.deploy.sh" />
+        <item itemvalue="Shell Script.setup.sh" />
+        <item itemvalue="Shell Script.build.sh" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8d987fbc-8efe-45c0-841c-c686f8879a61" name="Default Changelist" comment="" />
+      <created>1604272885796</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604272885796</updated>
+      <workItem from="1604272886884" duration="7330000" />
+      <workItem from="1604342920607" duration="36640000" />
+      <workItem from="1604545884125" duration="24000" />
+      <workItem from="1604686551882" duration="243000" />
+      <workItem from="1604687151250" duration="4251000" />
+      <workItem from="1604711616808" duration="931000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.env" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.service" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2343" y="223" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604349532911">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2343" y="223" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604349532911" />
+    <state x="2600" y="356" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604369358923">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2600" y="356" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604369358923" />
+    <state x="3097" y="314" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1604364376993">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="3097" y="314" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604364376993" />
+    <state x="2667" y="312" key="FileChooserDialogImpl" timestamp="1604545906407">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2667" y="312" key="FileChooserDialogImpl/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604545906407" />
+    <state width="935" height="288" key="GridCell.Tab.0.bottom" timestamp="1604697561408">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.0.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="935" height="288" key="GridCell.Tab.0.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604697561408" />
+    <state width="935" height="288" key="GridCell.Tab.0.center" timestamp="1604697561408">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.0.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="935" height="288" key="GridCell.Tab.0.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604697561408" />
+    <state width="935" height="288" key="GridCell.Tab.0.left" timestamp="1604697561407">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.0.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="935" height="288" key="GridCell.Tab.0.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604697561407" />
+    <state width="935" height="288" key="GridCell.Tab.0.right" timestamp="1604697561408">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.0.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="935" height="288" key="GridCell.Tab.0.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604697561408" />
+    <state width="1895" height="356" key="GridCell.Tab.1.bottom" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.1.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1872" height="356" key="GridCell.Tab.1.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604360198313" />
+    <state width="1895" height="356" key="GridCell.Tab.1.center" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.1.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1872" height="356" key="GridCell.Tab.1.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604360198313" />
+    <state width="1895" height="356" key="GridCell.Tab.1.left" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.1.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1872" height="356" key="GridCell.Tab.1.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604360198313" />
+    <state width="1895" height="356" key="GridCell.Tab.1.right" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.1.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1872" height="356" key="GridCell.Tab.1.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604360198313" />
+    <state width="1895" height="356" key="GridCell.Tab.2.bottom" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.2.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.2.center" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.2.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.2.left" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.2.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.2.right" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.2.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.3.bottom" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.3.bottom/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.3.center" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.3.center/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.3.left" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.3.left/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state width="1895" height="356" key="GridCell.Tab.3.right" timestamp="1604361744995">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1895" height="356" key="GridCell.Tab.3.right/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604361744995" />
+    <state x="2380" y="200" key="SettingsEditor" timestamp="1604362970583">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2380" y="200" key="SettingsEditor/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604362970583" />
+    <state x="1920" y="22" width="958" height="1056" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1604360110459">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1920" y="22" width="958" height="1056" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604360110459" />
+    <state x="3034" y="289" width="590" height="520" key="find.popup" timestamp="1604386329899">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="3034" y="289" width="590" height="520" key="find.popup/0.0.1920.1080/3840.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1604386329899" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/haunted_tiles$haunted_tiles.coverage" NAME="haunted_tiles Coverage Results" MODIFIED="1604382790566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api" />
+    <SUITE FILE_PATH="coverage/haunted_tiles$build.coverage" NAME="build Coverage Results" MODIFIED="1604364106768" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

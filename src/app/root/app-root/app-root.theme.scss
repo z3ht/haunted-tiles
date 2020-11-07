@@ -1,0 +1,10 @@
+@import "~@angular/material/theming";
+
+@mixin app-root-theme($theme) {
+  $primary: map-get($theme, primary);
+  
+  mat-toolbar.game-toolbar[color="primary"] {
+    background-color: mat-color($primary, 800);
+    color: mat-contrast($primary, 800);
+  }
+}
