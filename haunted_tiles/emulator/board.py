@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Map(Enum):
+class BoardType(Enum):
     DEFAULT = [[3 for _ in range(7)] for j in range(7)],
     WAFFLE_TOWN = [
         [3, 3, 0, 3, 0, 3, 3],
@@ -42,9 +42,9 @@ class Map(Enum):
 
 
 class Board:
-    def __init__(self, map):
+    def __init__(self, board_type):
 
-        self.board = map.value
+        self.board = board_type.value
         self.home_start_locations = [(0, 0), (0, 3), (0, 6)]
         self.away_start_locations = [(6, 0), (6, 3), (6, 6)]
         self.board_size = (7, 7)
