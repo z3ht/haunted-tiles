@@ -29,7 +29,7 @@ function main(gameState, side){
 
   request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
   request.send(null);
-  const move = request.responseText;
+  const move = JSON.parse(request.responseText);
 
   console.log(move);
 
@@ -37,54 +37,54 @@ function main(gameState, side){
 }
 
 function test() {
-  request.open('GET', baseUrl + "/?Api-Token=ep1c-t0ken");
+  request.open('GET', baseUrl + "/hello_world?Api-Token=ep1c-t0ken", false);
   request.send(null);
 
   console.log(request.status);
   console.log(request.responseText);
 }
 
-// console.log(main({
-//   boardSize: [7, 7],
-//   tileStates: [
-//     [1, 3, 3, 1, 3, 3, 1],
-//     [3, 3, 3, 3, 3, 3, 3],
-//     [3, 3, 3, 3, 3, 3, 3],
-//     [3, 3, 3, 3, 3, 3, 3],
-//     [3, 3, 3, 3, 3, 3, 3],
-//     [1, 3, 3, 3, 2, 2, 2],
-//     [3, 3, 3, 3, 2, 3, 3]
-//   ],
-//   teamStates: {
-//     away: [
-//       {
-//         coord: [5, 0],
-//         isDead: false
-//       },
-//       {
-//         coord: [5, 4],
-//         isDead: false
-//       },
-//       {
-//         coord: [5, 5],
-//         isDead: false
-//       }
-//     ],
-//     home: [
-//       {
-//         coord: [0, 0],
-//         isDead: false
-//       },
-//       {
-//         coord: [0, 3],
-//         isDead: false
-//       },
-//       {
-//         coord: [0, 6],
-//         isDead: false
-//       }
-//     ]
-//   }
-// }, "home"));
+console.log(main({
+  boardSize: [7, 7],
+  tileStates: [
+    [1, 3, 3, 1, 3, 3, 1],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [1, 3, 3, 3, 2, 2, 2],
+    [3, 3, 3, 3, 2, 3, 3]
+  ],
+  teamStates: {
+    away: [
+      {
+        coord: [5, 0],
+        isDead: false
+      },
+      {
+        coord: [5, 4],
+        isDead: false
+      },
+      {
+        coord: [5, 5],
+        isDead: false
+      }
+    ],
+    home: [
+      {
+        coord: [0, 0],
+        isDead: false
+      },
+      {
+        coord: [0, 3],
+        isDead: false
+      },
+      {
+        coord: [0, 6],
+        isDead: false
+      }
+    ]
+  }
+}, "home"));
 
 // test();
