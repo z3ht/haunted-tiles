@@ -1,7 +1,5 @@
 import json
 
-import json
-
 
 def format_game_state(game_state, include_dead_state=False):
     """
@@ -16,8 +14,8 @@ def format_game_state(game_state, include_dead_state=False):
     game_state = json.loads(game_state)
     if not include_dead_state:
         return {'tileStates': game_state['tileStates'],
-                'home': [plyr['coord'] for plyr in game_state['teamStates']['home']],
-                'away': [plyr['coord'] for plyr in game_state['teamStates']['away']],
+                'home': [plyr['coord'] for plyr in game_state['teamStates']['home'] if not plyr['isDead']],
+                'away': [plyr['coord'] for plyr in game_state['teamStates']['away'] if not plyr['isDead']],
                 'boardSize': game_state['boardSize']}
 
     else:
