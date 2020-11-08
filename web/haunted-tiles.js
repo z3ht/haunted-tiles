@@ -1,79 +1,90 @@
-const getContent = function(url) {
-  // return new pending promise
-  return new Promise((resolve, reject) => {
-    // select http or https module, depending on reqested url
-    const lib = require("https")
-    const request = lib.get(url, (response) => {
-      // handle http errors
-      if (response.statusCode < 200 || response.statusCode > 299) {
-         reject(new Error('Failed to load page, status code: ' + response.statusCode));
-       }
-      // temporary data holder
-      const body = [];
-      // on every content chunk, push it to the data array
-      response.on('data', (chunk) => body.push(chunk));
-      // we are done, resolve promise with those joined chunks
-      response.on('end', () => resolve(body.join('')));
-    });
-    // handle connection errors of the request
-    request.on('error', (err) => reject(err))
-    })
-};
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
-function sleep(msec, start_date=Date.now()) {
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - start_date < msec);
-}
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const request = new XMLHttpRequest();
 
-const baseUrl = "https://127.0.0.1:8421"
+const baseUrl = "https://haunted-tiles.xyz"
 const apiToken = "ep1c-t0ken";
 const strategy = "basic";
 let gameId = undefined
 
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
-async function main(gameState, side){
+function main(gameState, side){
   gameState = JSON.stringify(gameState).toString();
   side = JSON.stringify(side).toString();
 
-  const start_date = Date.now();
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
     const args = "&Strategy=" + strategy + "&Game-State=" + gameState + "&Side=" + side
-    gameId = await getContent(baseUrl + "/?" + token + args);
+    request.open('POST', baseUrl + "/?" + token + args, false);
+    request.send(null);
+    gameId = request.responseText;
   } else {
     const args = "&Game-Id=" + gameId + "&Game-State=" + gameState + "&Side=" + side
-    await getContent(baseUrl + "/update?" + token + args).catch(console.log);
+    request.open('POST', baseUrl + "/update?" + token + args, false);
+    request.send(null);
   }
-
-  sleep(1500, start_date);
 
   console.log(gameId);
 
-  const result = await getContent(baseUrl + "/move?" + token + "&Game-Id=" + gameId);
+  request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
+  request.send(null);
+  const move = JSON.parse(request.responseText);
 
-  sleep(1800, start_date);
+  console.log(move);
 
-  console.log(result)
-
-  return result;
+  return move;
 }
 
 function test() {
-  const token = "Api-Token=" + apiToken;
-  getContent(baseUrl + "/hello_world?" + token)
-      .then(console.log)
-      .catch(console.error);
+  request.open('GET', baseUrl + "/hello_world?Api-Token=ep1c-t0ken", false);
+  request.send(null);
+
+  console.log(request.status);
+  console.log(request.responseText);
 }
 
-main({
-  boardSize: [2, 2],
+console.log(main({
+  boardSize: [7, 7],
   tileStates: [
-      [3, 1],
-      [2, 0]
+    [1, 3, 3, 1, 3, 3, 1],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3],
+    [1, 3, 3, 3, 2, 2, 2],
+    [3, 3, 3, 3, 2, 3, 3]
   ],
-  teamStates: [undefined, undefined, undefined]
-}, "home")
+  teamStates: {
+    away: [
+      {
+        coord: [5, 0],
+        isDead: false
+      },
+      {
+        coord: [5, 4],
+        isDead: false
+      },
+      {
+        coord: [5, 5],
+        isDead: false
+      }
+    ],
+    home: [
+      {
+        coord: [0, 0],
+        isDead: false
+      },
+      {
+        coord: [0, 3],
+        isDead: false
+      },
+      {
+        coord: [0, 6],
+        isDead: false
+      }
+    ]
+  }
+}, "home"));
+
+// test();

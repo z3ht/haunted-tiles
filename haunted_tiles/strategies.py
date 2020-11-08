@@ -35,4 +35,4 @@ class Basic(Strategy):
         pass
 
     def move(self):
-        pass
+        return ['south', 'none', 'south']
