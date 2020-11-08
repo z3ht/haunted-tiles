@@ -82,7 +82,7 @@ def move():
     game_id = format_string(request.args["Game-Id"])
 
     if game_id not in game_cache:
-        abort(400)
+        abort(409)
 
     return game_cache[game_id].move()
 
