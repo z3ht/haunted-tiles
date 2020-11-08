@@ -1,10 +1,10 @@
 import functools
-from flask import jsonify
+import json
 
 
 def return_json(f):
     @functools.wraps(f)
     def inner(**kwargs):
-        return jsonify(f(**kwargs))
+        return json.dumps(f(**kwargs))
 
     return inner

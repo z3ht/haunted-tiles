@@ -25,6 +25,6 @@ def format_game_state(game_state, include_dead_state=False):
                 'boardSize': game_state['boardSize']}
 
 
-def format_side(side):
+def format_string(side):
     side = json.loads(side)
     return side.lower()

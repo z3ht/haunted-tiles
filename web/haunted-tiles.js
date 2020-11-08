@@ -1,3 +1,5 @@
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const request = new XMLHttpRequest();
 
@@ -25,7 +27,7 @@ function main(gameState, side){
 
   console.log(gameId);
 
-  request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId);
+  request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
   request.send(null);
   const move = request.responseText;
 
@@ -34,11 +36,55 @@ function main(gameState, side){
   return move;
 }
 
-console.log(main({
-  boardSize: [2, 2],
-  tileStates: [
-      [3, 1],
-      [2, 0]
-  ],
-  teamStates: [undefined, undefined, undefined]
-}, "home"));
+function test() {
+  request.open('GET', baseUrl + "/?Api-Token=ep1c-t0ken");
+  request.send(null);
+
+  console.log(request.status);
+  console.log(request.responseText);
+}
+
+// console.log(main({
+//   boardSize: [7, 7],
+//   tileStates: [
+//     [1, 3, 3, 1, 3, 3, 1],
+//     [3, 3, 3, 3, 3, 3, 3],
+//     [3, 3, 3, 3, 3, 3, 3],
+//     [3, 3, 3, 3, 3, 3, 3],
+//     [3, 3, 3, 3, 3, 3, 3],
+//     [1, 3, 3, 3, 2, 2, 2],
+//     [3, 3, 3, 3, 2, 3, 3]
+//   ],
+//   teamStates: {
+//     away: [
+//       {
+//         coord: [5, 0],
+//         isDead: false
+//       },
+//       {
+//         coord: [5, 4],
+//         isDead: false
+//       },
+//       {
+//         coord: [5, 5],
+//         isDead: false
+//       }
+//     ],
+//     home: [
+//       {
+//         coord: [0, 0],
+//         isDead: false
+//       },
+//       {
+//         coord: [0, 3],
+//         isDead: false
+//       },
+//       {
+//         coord: [0, 6],
+//         isDead: false
+//       }
+//     ]
+//   }
+// }, "home"));
+
+// test();
