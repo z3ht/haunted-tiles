@@ -3,9 +3,10 @@ from haunted_tiles.emulator.board import Board
 from haunted_tiles.strategies import Strategy
 from haunted_tiles.emulator.game import Winner
 from haunted_tiles.strategies import Side
+from haunted_tiles.emulator.board import BoardType
 
 def get_basic_board():
-    basic_board = Board('basic')
+    basic_board = Board(BoardType.DEFAULT)
     basic_board.board = [[0 for _ in range(7)] for _ in range(7)]
     basic_board.board[0][0] = 3
     basic_board.board[6][0] = 3
