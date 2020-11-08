@@ -11,16 +11,12 @@ class Board:
         self.board_size = self._board_sizes[board_type]
         self.broken_tiles = set()
 
-
     def update_board(self, player_locations):
         """
-        :param occupied_tiles: iterable of positions that are occupied after players move
+        :param player_locations: iterable of all player locations
         """
         for y, x in player_locations:
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
             if self.board[y][x] <= 0:
                 self.broken_tiles.add((x, y))
-
-    def get_broken_tiles(self):
-        return self.broken_tiles
