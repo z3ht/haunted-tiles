@@ -38,7 +38,7 @@ def create_game():
     side = format_string(request.args["Side"])
     strategy = request.args["Strategy"].lower()
 
-    if request.args["Strategy"].lower() not in available_strategies:
+    if strategy not in available_strategies:
         abort(400)
 
     if "Game-State" not in request.args:
@@ -64,10 +64,7 @@ def update():
     game_id = format_string(request.args["Game-Id"])
     game_state = format_game_state(request.args["Game-State"].lower())
 
-    if request.args["Game-Id"] not in game_cache:
-        abort(400)
-
-    if request.args["Game-State"].lower():
+    if game_id not in game_cache:
         abort(400)
 
     game_cache[game_id].update(game_state=game_state)

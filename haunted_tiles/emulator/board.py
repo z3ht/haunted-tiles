@@ -1,20 +1,60 @@
+from enum import Enum
+
+
+class BoardType(Enum):
+    DEFAULT = [[3 for _ in range(7)] for j in range(7)],
+    WAFFLE_TOWN = [
+        [3, 3, 0, 3, 0, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3],
+        [0, 3, 0, 3, 0, 3, 0],
+        [3, 3, 3, 3, 3, 3, 3],
+        [0, 3, 0, 3, 0, 3, 0],
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 0, 3, 0, 3, 3]
+    ],
+    JEFF_BRIDGES = [
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 0, 3, 3, 3, 0, 3],
+        [0, 3, 3, 0, 3, 3, 0],
+        [3, 0, 3, 3, 3, 0, 3],
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3]
+    ],
+    IN = [
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 0, 0, 0, 3, 3],
+        [3, 3, 3, 0, 3, 3, 3],
+        [3, 3, 0, 0, 0, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3],
+        [3, 3, 3, 3, 3, 3, 3]
+    ],
+    HOURGLASS = [
+        [3, 3, 3, 3, 3, 3, 0],
+        [0, 3, 3, 3, 3, 3, 0],
+        [0, 0, 3, 3, 3, 0, 0],
+        [0, 0, 3, 0, 3, 0, 0],
+        [0, 0, 3, 3, 3, 0, 0],
+        [0, 3, 3, 3, 3, 3, 0],
+        [3, 3, 3, 3, 3, 3, 0]
+    ]
+
 
 class Board:
     def __init__(self, board_type):
-        self._board_types = {'basic': [[3 for i in range(7)] for j in range(7)]}
-        self._starting_locations = {'basic': {'home': [(0, 0), (0, 3), (0, 6)], 'away': [(6, 0), (6, 3), (6, 6)]}}
-        self._board_sizes = {'basic': (7, 7)}
 
-        self.board = self._board_types[board_type]
-        self.home_start_locations = self._starting_locations[board_type]['home']
-        self.away_start_locations = self._starting_locations[board_type]['away']
-        self.board_size = self._board_sizes[board_type]
+        self.board = board_type.value
+        self.home_start_locations = [(0, 0), (0, 3), (0, 6)]
+        self.away_start_locations = [(6, 0), (6, 3), (6, 6)]
+        self.board_size = (7, 7)
         self.broken_tiles = set()
         self.home_tile_damage = 0
         self.away_tile_damage = 0
 
     def damage_tiles(self, home_player_locations, away_player_locations):
         """
+        :param player_locations: all player locations as a tuple (x, y)
         :param player_locations: iterable of all player locations
         """
         for y, x in home_player_locations:
@@ -31,5 +71,6 @@ class Board:
             if self.board[y][x] <= 0:
                 self.broken_tiles.add((y, x))
 
-
+    def get_broken_tiles(self):
+        return self.broken_tiles
 
