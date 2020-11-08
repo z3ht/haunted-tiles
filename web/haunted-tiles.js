@@ -27,36 +27,35 @@ function sleep(msec, start_date=Date.now()) {
   } while (currentDate - start_date < msec);
 }
 
-
+const baseUrl = "https://127.0.0.1:8421"
 const apiToken = "ep1c-t0ken";
 const strategy = "basic";
-let gameId = undefined;
+let gameId = undefined
 
-function main(gameState, side){
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
+async function main(gameState, side){
+  gameState = JSON.stringify(gameState).toString();
+  side = JSON.stringify(side).toString();
+
   const start_date = Date.now();
-
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
     const args = "&Strategy=" + strategy + "&Game-State=" + gameState + "&Side=" + side
-    getContent("https://haunted-tiles.xyz/?" + token + args)
-      .then((newGameId) => gameId = newGameId)
-      .catch(console.error);
+    gameId = await getContent(baseUrl + "/?" + token + args);
   } else {
     const args = "&Game-Id=" + gameId + "&Game-State=" + gameState + "&Side=" + side
-    getContent("https://haunted-tiles.xyz/update?" + token + args)
-      .then(console.log)
-      .catch(console.error);
+    await getContent(baseUrl + "/update?" + token + args).catch(console.log);
   }
 
-  sleep(1600, start_date);
+  sleep(1500, start_date);
 
-  let result = undefined
-  getContent("https://haunted-tiles.xyz/move?" + token + "&Game-Id=" + gameId)
-      .then((out) => result = out)
-      .catch(console.error);
+  console.log(gameId);
 
-  sleep(1900, start_date);
+  const result = await getContent(baseUrl + "/move?" + token + "&Game-Id=" + gameId);
+
+  sleep(1800, start_date);
 
   console.log(result)
 
@@ -65,9 +64,16 @@ function main(gameState, side){
 
 function test() {
   const token = "Api-Token=" + apiToken;
-  getContent("https://haunted-tiles.xyz/hello_world?" + token)
+  getContent(baseUrl + "/hello_world?" + token)
       .then(console.log)
       .catch(console.error);
 }
 
-test()
+main({
+  boardSize: [2, 2],
+  tileStates: [
+      [3, 1],
+      [2, 0]
+  ],
+  teamStates: [undefined, undefined, undefined]
+}, "home")

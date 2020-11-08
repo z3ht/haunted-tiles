@@ -17,6 +17,7 @@ game_cache = ExpiringDict(max_len=1000, max_age_seconds=60*60)
 
 @app.before_request
 def verify_header():
+    reques = request
     # Prevents other teams from stealing our algorithm. The front end code must contain the api-token.
     if "Api-Token" not in request.args or request.args["Api-Token"] != os.getenv("HAUNTED_TILES_API_TOKEN"):
         abort(401)
@@ -26,22 +27,27 @@ def verify_header():
 @app.route('/')
 @return_json
 def create_game():
+    for item in ["Side", "Strategy"]:
+        if item not in request.args:
+            abort(400)
+
     available_strategies = {
         "basic": strategies.Basic
     }
 
-    if "Strategy" not in request.args or request.args["Strategy"].lower() not in available_strategies:
+    side = format_side(request.args["Side"])
+    strategy = request.args["Strategy"].lower()
+
+    if request.args["Strategy"].lower() not in available_strategies:
         abort(400)
 
-    if "Game-State" not in request.args or request.args["Game-State"].lower() not in available_strategies:
+    if "Game-State" not in request.args:
         abort(400)
 
-    if "Side" not in request.args or request.args["Side"].lower() not in ['home', 'away']:
+    if side not in ['home', 'away']:
         abort(400)
 
     game_state = format_game_state(request.args["Game-State"])
-    side = format_side(request.args["Side"])
-    strategy = request.args["Strategy"].lower()
     game_id = uuid.uuid4().hex.upper()[0:6]
 
     game_cache[game_id] = available_strategies[strategy](game_state=game_state, side=side)
@@ -53,6 +59,9 @@ def create_game():
 @app.route('/update')
 def update():
     if "Game-Id" not in request.args or request.args["Game-Id"] not in game_cache:
+        abort(400)
+
+    if "Game-State" not in request.args or request.args["Game-State"].lower():
         abort(400)
 
     game_state = format_game_state(request.args["Game-State"])
