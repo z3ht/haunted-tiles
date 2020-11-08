@@ -25,8 +25,7 @@ def verify_header():
         abort(401)
 
 
-# POST
-@app.route('/')
+@app.route('/', methods=["POST"])
 @return_json
 def create_game():
     for item in ["Side", "Strategy"]:
@@ -57,8 +56,7 @@ def create_game():
     return game_id
 
 
-# POST
-@app.route('/update')
+@app.route('/update', methods=["POST"])
 def update():
     if "Game-Id" not in request.args or request.args["Game-Id"] not in game_cache:
         abort(400)
@@ -70,8 +68,7 @@ def update():
     game_cache[request.args["Game-Id"]].update(game_state=game_state)
 
 
-# GET
-@app.route('/move')
+@app.route('/move', methods=["GET"])
 @return_json
 def move():
     if "Game-Id" not in request.args or request.args["Game-Id"] not in game_cache:
@@ -81,7 +78,7 @@ def move():
 
 
 # GET
-@app.route('/hello_world')
+@app.route('/hello_world', methods=["GET"])
 @return_json
 def test():
     return hello_world()
