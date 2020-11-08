@@ -5,7 +5,7 @@ from flask import Flask, request, abort
 import uuid
 
 from haunted_tiles.examples import hello_world
-from haunted_tiles.utils import return_json
+from haunted_tiles.utils import return_json, crossdomain
 from haunted_tiles import strategies
 from haunted_tiles.preprocess import format_side, format_game_state
 
@@ -26,6 +26,7 @@ def verify_header():
 # POST
 @app.route('/')
 @return_json
+@crossdomain(origin='*')
 def create_game():
     for item in ["Side", "Strategy"]:
         if item not in request.args:
@@ -57,6 +58,7 @@ def create_game():
 
 # POST
 @app.route('/update')
+@crossdomain(origin='*')
 def update():
     if "Game-Id" not in request.args or request.args["Game-Id"] not in game_cache:
         abort(400)
@@ -71,6 +73,7 @@ def update():
 # GET
 @app.route('/move')
 @return_json
+@crossdomain(origin='*')
 def move():
     if "Game-Id" not in request.args or request.args["Game-Id"] not in game_cache:
         abort(400)
@@ -81,6 +84,7 @@ def move():
 # GET
 @app.route('/hello_world')
 @return_json
+@crossdomain(origin='*')
 def test():
     return hello_world()
 
