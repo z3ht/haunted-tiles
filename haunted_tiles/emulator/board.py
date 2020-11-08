@@ -17,6 +17,7 @@ class Board:
     def update_board(self, player_locations):
         """
         :param player_locations: all player locations as a tuple (x, y)
+        :param player_locations: iterable of all player locations
         """
         for y, x in player_locations:
             if self.board[y][x] > 0:
