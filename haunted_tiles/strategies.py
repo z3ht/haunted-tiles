@@ -10,11 +10,7 @@ class Strategy:
 
     def __init__(self, game_state, side):
         self.game_state = game_state
-
-        for val in Side:
-            if val == side:
-                self.side = val
-                break
+        self.side = side
 
         if self.side is None:
             raise ValueError("Incorrect side value provided")
