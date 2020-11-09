@@ -12,7 +12,7 @@ class Winner(str, Enum):
 
 
 class Game:
-    def __init__(self, board, home_strategy, away_strategy):
+    def __init__(self, board, home_strategy, away_strategy, return_dead=False):
         """
         :param board: board object
         :param home_strategy: Strategy object for home team
@@ -24,8 +24,9 @@ class Game:
         self.board = board
         self.home_players = [Player(y, x) for y, x in board.home_start_locations]
         self.away_players = [Player(y, x) for y, x in board.away_start_locations]
-        self.home_strategy = home_strategy(self.get_game_state(), Side.HOME)
-        self.away_strategy = away_strategy(self.get_game_state(), Side.AWAY)
+        self.return_dead = return_dead
+        self.home_strategy = home_strategy(self.get_game_state(return_dead), Side.HOME)
+        self.away_strategy = away_strategy(self.get_game_state(return_dead), Side.AWAY)
 
     def play_game(self):
         """
@@ -42,8 +43,8 @@ class Game:
         """
         Get moves of players and move players
         """
-        self.home_strategy.update(self.get_game_state())
-        self.away_strategy.update(self.get_game_state())
+        self.home_strategy.update(self.get_game_state(self.return_dead))
+        self.away_strategy.update(self.get_game_state(self.return_dead))
         home_1_move, home_2_move, home_3_move = self.home_strategy.move()
         away_1_move, away_2_move, away_3_move = self.away_strategy.move()
         self.home_players[0].move(home_1_move)
