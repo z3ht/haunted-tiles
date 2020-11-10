@@ -9,6 +9,7 @@ def dijkstras(board, start, destination=None):
     :return:
     """
     moves = [[np.inf for i in range(7)] for j in range(7)]
+    shortest_path = []
     visited = set()
     next_tiles = deque()
     valid_vertices = 0
@@ -27,11 +28,10 @@ def dijkstras(board, start, destination=None):
                 _parse_valid_neighbor(y, x, y_new, x_new, moves, next_tiles)
         visited.add((y, x))
 
-        if tuple([y, x]) == destination:
-            return moves
+        if (y, x) == destination:
+            return moves, _shortest_path(moves, board, start, destination)
 
         y, x = next_tiles.popleft()
-
     return moves
 
 
@@ -44,4 +44,18 @@ def _parse_valid_neighbor(y, x, y_new, x_new, moves, next_tiles):
     moves_through_current = moves[y][x] + 1
     if moves_through_current < moves[y_new][x_new]:
         moves[y_new][x_new] = moves_through_current
+
+
+def _shortest_path(moves, board, start, end):
+    path = [end]
+    while end != start:
+        best_move = (0, 0)
+        shortest_path = np.inf
+        for y, x in [(end[0] - 1, end[1]), (end[0] + 1, end[1]), (end[0], end[1] - 1), (end[0], end[1] + 1)]:
+            if _is_valid_move(y, x, board) and moves[y][x] < shortest_path:
+                best_move = (y, x)
+                shortest_path = moves[y][x]
+        path.append(best_move)
+        end = best_move
+    return path
 
