@@ -12,11 +12,12 @@ class Winner(str, Enum):
 
 
 class Game:
-    def __init__(self, board, home_strategy, away_strategy, return_dead=False):
+
+    def __init__(self, board, home_strategy=None, away_strategy=None, return_dead=False):
         """
         :param board: board object
-        :param home_strategy: Strategy object for home team
-        :param away_strategy: Strategy object for away team
+        :param home_strategy: Strategy object for home team (default: call move manually)
+        :param away_strategy: Strategy object for away team (default: call move manually)
         """
         if not isinstance(board, Board):
             raise TypeError(f'Expected board to be type Board. Got type: {type(board)}')
