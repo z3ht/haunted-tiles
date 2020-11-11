@@ -6,8 +6,6 @@ from haunted_tiles.agent.base import ReinforcementAgent
 
 class HauntedTilesEnvironment(Env):
 
-    ACTIONS = ['north', 'south', 'east', 'west', 'none']
-
     def __init__(self, agents, board, observation_space=None):
         """
         Initialize a Haunted Tiles environment
@@ -100,9 +98,9 @@ class HauntedTilesEnvironment(Env):
 
             formatted_action = agent.format_action(action)
 
-            rewards_n[i] = agent.calc_reward(formatted_action)
+            rewards_n[i] = agent.calc_reward(self.game, formatted_action)
 
-            agent.update_game(formatted_action, self.game)
+            agent.update_game(self.game, formatted_action)
 
         for i, agent in enumerate(self.other_agents):
             move = agent.move(self.game.get_game_state(include_dead_state=True))

@@ -21,7 +21,7 @@ class ReinforcementAgent(Agent):
     def interpret_game_state(self, game_state):
         pass
 
-    def calc_reward(self, action):
+    def calc_reward(self, game, action):
         pass
 
 

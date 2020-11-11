@@ -110,21 +110,30 @@ class Game:
 
     def move_player(self, side, player_index, location):
         """
-        This method will move the desired monster to a new location if that location is valid
+        This method moves the desired monster to a new location if that location is valid
+
         AFTER MOVING ALL PLAYERS THE BOARD MUST BE UPDATED WITH update_board() and update_dead(). This step must happen
         after ALL players move.
+
+        Params
+        ======
         :param side: string indicating the team the player(monster) is on
         :param player_index: what player should be moved (0 - 2 inclusive)
-        :param location: tuple of new board location
+        :param location: tuple of new player location
+
+        Returns
+        =======
         :return: None
         """
-        if location[0] in range(7) and location[1] in range(7):
+        if 0 < location[0] < self.board.board_size[0] and 0 < location[1] < self.board.board_size[1]:
             if side == 'home':
                 self.home_strategy[player_index].move(location)
             elif side == 'away':
                 self.home_strategy[player_index].move(location)
             else:
-                raise Exception('Unrecognized side: away / home')
+                raise ValueError('Unrecognized side: away / home')
+        else:
+            raise ValueError('Unrecognized location')
 
     def get_game_state(self, include_dead_state=False):
         """
