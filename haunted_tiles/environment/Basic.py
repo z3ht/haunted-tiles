@@ -1,42 +1,56 @@
-from gym import Env, spaces, register, make
+from gym import Env, spaces
 import numpy as np
-import random
 from haunted_tiles.emulator.board import Board, BoardType
 from haunted_tiles.emulator.game import Game, Winner
 from haunted_tiles.strategies import Strategy, RandomAvoidDeath
-from stable_baselines import common, PPO2
+from stable_baselines3 import common, PPO
 
-class TestEnvironment(Env):
+
+class BasicEnvironment(Env):
 
     ACTIONS = ['north', 'south', 'east', 'west', 'none']
 
-    def __init__(self):
-        self.board = Board(BoardType.DEFAULT)
-        self.board.board = [[3 for _ in range(7)] for _ in range(7)]
-        self.game = Game(self.board, Agent, RandomAvoidDeath, True)
+    def __init__(self, strategies, board):
+        """
+        Initialize an environment with two competing agents
 
-        board_size = self.board.board_size
+        :param strategies: List of 2 strategies for home and away team respectively
+        :param board: The board that the game should use
+        """
+
+        self.strategies = strategies
+
+        self.board = board
+        self.original_board = self.board.copy()
+        self.game = Game(self.board, strategies[0], strategies[1], True)
 
         # observe the whole board 0-3 are empty tiles with damage 4 is home player 5 is away player
+        board_size = self.board.board_size
         self.observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]), dtype=np.uint8)
 
         # 5 possible actions at a given state
         self.action_space = spaces.Discrete(5)
-        self.state = self._get_action_space(self.game.get_game_state(include_dead_state=True))
 
+        # Convert game state to two lists that are observed by each teams agent
+        # 0-3 for tile status, 4 for monsters on same team, 5 for monsters on enemy team
+        self.game_state = self.game.get_game_state(include_dead_state=True)
 
     @staticmethod
-    def _get_action_space(game_state):
+    def _game_state_to_team_observations(game_state):
         board = game_state['tileStatus'].board
-        home = [(player[0], player[1]) for player in game_state['home'] if not player[2]]
-        away = [(player[0], player[1]) for player in game_state['away'] if not player[2]]
+
+        # team positions for living players
+        home_positions = [(player[0], player[1]) for player in game_state['home'] if not player[2]]
+        away_positions = [(player[0], player[1]) for player in game_state['away'] if not player[2]]
+
+        # Append all tile values or 4/5 for home/away players
         result = []
         for i, row in enumerate(board):
             row_list = []
             for j, val in enumerate(row):
-                if (i, j) in home:
+                if (i, j) in home_positions:
                     row_list.append(4)
-                elif (i, j) in away:
+                elif (i, j) in away_positions:
                     row_list.append(5)
                 else:
                     row_list.append(val)
@@ -56,13 +70,19 @@ class TestEnvironment(Env):
             return False
         return True
 
+    def reset(self):
+        self.board = Board(BoardType.DEFAULT)
+        self.board.board = [[3 for _ in range(7)] for _ in range(7)]
+        self.game = Game(self.board, Agent, RandomAvoidDeath, True)
+        self.game_state = self._game_state_to_team_observations(self.game.get_game_state(include_dead_state=True))
+        return self.game_state
 
     def step(self, action):
         """
 
         Parameters
         ----------
-        action :
+        action : List of possible moves for each agent
 
         Returns
         -------
@@ -95,7 +115,7 @@ class TestEnvironment(Env):
             episode_over = True
 
         if not self._valid_move(direction, agent.get_location()):
-            return self.state, 5, episode_over, {}
+            return self.game_state, 5, episode_over, {}
 
         # move players according to strategies
         self.game.move_players()
@@ -104,25 +124,19 @@ class TestEnvironment(Env):
 
         self.game.update_board()
         self.game.update_dead()
-        self.state = self._get_action_space(self.game.get_game_state(include_dead_state=True))
+        self.game_state = self._game_state_to_team_observations(self.game.get_game_state(include_dead_state=True))
 
         # self.status = self.env.step()
         # reward = self._get_reward()
         # ob = self.env.getState()
         # episode_over = self.status != hfo_py.IN_GAME
         # return ob, reward, episode_over, {}
-        print(self.state)
-        return self.state, 5, episode_over, {}
-
-    def reset(self):
-        self.board = Board(BoardType.DEFAULT)
-        self.board.board = [[3 for _ in range(7)] for _ in range(7)]
-        self.game = Game(self.board, Agent, RandomAvoidDeath, True)
-        self.state = self._get_action_space(self.game.get_game_state(include_dead_state=True))
-        return self.state
+        print(self.game_state)
+        return self.game_state, 5, episode_over, {}
 
     def render(self, mode='human', close=False):
-        print(self.state)
+        print(self.game_state)
+
 
 class Agent(Strategy):
     def __init__(self, game_state, side):
@@ -141,9 +155,10 @@ class Agent(Strategy):
         """
         return ['none', 'none', 'none']
 
-env = TestEnvironment()
 
-model = PPO2(common.policies.MlpPolicy, env, verbose=2)
+env = BasicEnvironment(Agent, Board(BoardType.DEFAULT))
+
+model = PPO(common.policies.MlpPolicy, env, verbose=2)
 model.learn(total_timesteps=4000)
 
 obs = env.reset()

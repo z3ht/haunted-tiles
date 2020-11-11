@@ -2,7 +2,7 @@ from stable_baselines import deepq
 
 from haunted_tiles.emulator.board import Board, BoardType
 from haunted_tiles.emulator.game import Game, Winner
-from haunted_tiles.reinforcement.environment.grant.environment import TestEnvironment
+from haunted_tiles.environments.environment import TestEnvironment
 from haunted_tiles.strategies import Strategy, RandomAvoidDeath
 import numpy as np
 
