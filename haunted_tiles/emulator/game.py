@@ -1,6 +1,6 @@
 from haunted_tiles.emulator.board import Board
 from haunted_tiles.emulator.player import Player
-from haunted_tiles.strategies import Strategy
+from haunted_tiles.strategies import Side
 from enum import Enum
 
 
@@ -12,7 +12,7 @@ class Winner(str, Enum):
 
 
 class Game:
-    def __init__(self, board, home_strategy, away_strategy):
+    def __init__(self, board, home_strategy, away_strategy, return_dead=False):
         """
         :param board: board object
         :param home_strategy: Strategy object for home team
@@ -21,17 +21,12 @@ class Game:
         if not isinstance(board, Board):
             raise TypeError(f'Expected board to be type Board. Got type: {type(board)}')
 
-        if not isinstance(home_strategy, Strategy):
-            raise TypeError(f'Expected home_strategy to be type Strategy. Got type: {type(home_strategy)}')
-
-        if not isinstance(away_strategy, Strategy):
-            raise TypeError(f'Expected away_strategy to be type Strategy. Got type: {type(away_strategy)}')
-
         self.board = board
-        self.home_strategy = home_strategy
-        self.away_strategy = away_strategy
         self.home_players = [Player(y, x) for y, x in board.home_start_locations]
         self.away_players = [Player(y, x) for y, x in board.away_start_locations]
+        self.return_dead = return_dead
+        self.home_strategy = home_strategy(self.get_game_state(return_dead), Side.HOME)
+        self.away_strategy = away_strategy(self.get_game_state(return_dead), Side.AWAY)
 
     def play_game(self):
         """
@@ -48,26 +43,24 @@ class Game:
         """
         Get moves of players and move players
         """
-        self.home_strategy.update(self.get_game_state())
-        self.away_strategy.update(self.get_game_state())
+        self.home_strategy.update(self.get_game_state(self.return_dead))
+        self.away_strategy.update(self.get_game_state(self.return_dead))
         home_1_move, home_2_move, home_3_move = self.home_strategy.move()
         away_1_move, away_2_move, away_3_move = self.away_strategy.move()
-        self.home_players[0].move(*home_1_move)
-        self.home_players[1].move(*home_2_move)
-        self.home_players[2].move(*home_3_move)
-        self.away_players[0].move(*away_1_move)
-        self.away_players[1].move(*away_2_move)
-        self.away_players[2].move(*away_3_move)
-
+        self.home_players[0].move(home_1_move)
+        self.home_players[1].move(home_2_move)
+        self.home_players[2].move(home_3_move)
+        self.away_players[0].move(away_1_move)
+        self.away_players[1].move(away_2_move)
+        self.away_players[2].move(away_3_move)
 
     def update_board(self):
         """
         Reduce tile health where players are
         """
-        home_locations = [plyr.get_location for plyr in self.home_players]
-        away_locations = [plyr.get_location for plyr in self.away_players]
-        all_locations = home_locations + away_locations
-        self.board.update_board(all_locations)
+        home_locations = [plyr.get_location() for plyr in self.home_players]
+        away_locations = [plyr.get_location() for plyr in self.away_players]
+        self.board.damage_tiles(home_locations, away_locations)
 
     def update_dead(self):
         """
@@ -91,17 +84,22 @@ class Game:
             if away.get_location()[1] not in range(self.board.board_size[1]):
                 away.is_dead = True
 
-
     def get_winner(self):
+        # TODO tie is only returned if both teams have broken the same amount of tiles
         """
         Check if all players on either team have walked died
         :return: winner enum
         """
         home_lost = all([home.is_dead for home in self.home_players])
         away_lost = all([away.is_dead for away in self.away_players])
-
+        # ties only occur if teams have broken the same number of tiles
         if home_lost and away_lost:
-            return Winner.TIE
+            if self.board.home_tile_damage > self.board.away_tile_damage:
+                return Winner.HOME
+            elif self.board.home_tile_damage < self.board.away_tile_damage:
+                return Winner.AWAY
+            else:
+                return Winner.TIE
         if home_lost:
             return Winner.AWAY
         if away_lost:

@@ -69,6 +69,7 @@ def update():
 
     game_cache[game_id].update(game_state=game_state)
 
+    game_cache[game_id].update(game_state=game_state)
 
 @app.route('/move', methods=["GET"])
 @return_json
@@ -83,6 +84,7 @@ def move():
 
     return game_cache[game_id].move()
 
+    return game_cache[game_id].move()
 
 @app.route('/hello_world', methods=["GET"])
 @return_json

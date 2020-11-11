@@ -49,17 +49,28 @@ class Board:
         self.away_start_locations = [(6, 0), (6, 3), (6, 6)]
         self.board_size = (7, 7)
         self.broken_tiles = set()
+        self.home_tile_damage = 0
+        self.away_tile_damage = 0
 
-    def update_board(self, player_locations):
+    def damage_tiles(self, home_player_locations, away_player_locations):
         """
         :param player_locations: all player locations as a tuple (x, y)
         :param player_locations: iterable of all player locations
         """
-        for y, x in player_locations:
+        for y, x in home_player_locations:
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
+                self.home_tile_damage += 1
             if self.board[y][x] <= 0:
-                self.broken_tiles.add((x, y))
+                self.broken_tiles.add((y, x))
+
+        for y, x in away_player_locations:
+            if self.board[y][x] > 0:
+                self.board[y][x] -= 1
+                self.away_tile_damage += 1
+            if self.board[y][x] <= 0:
+                self.broken_tiles.add((y, x))
 
     def get_broken_tiles(self):
         return self.broken_tiles
+
