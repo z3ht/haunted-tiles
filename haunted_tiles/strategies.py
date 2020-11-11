@@ -125,9 +125,15 @@ class Agent(Strategy):
         pass
 
 
-class LoadModel(Strategy):
+class Model(Strategy):
     
-    def __init__(self, game_state, model, side):
+    def __init__(self, game_state, env, model, side):
+        """
+        Create strategy that
+        :param game_state:
+        :param model:
+        :param side:
+        """
         super().__init__(game_state, side)
 
         self.model = model

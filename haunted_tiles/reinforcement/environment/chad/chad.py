@@ -12,7 +12,7 @@ class BoardObj:
 class Brad(envs):
     ACTIONS = ['north', 'south', 'east', 'west', 'none']
 
-    def __init__(self, game=, board, agent, return_dead):
+    def __init__(self, game, board, agent, return_dead):
         self.board = board
         self.original_board = self.board.copy()
         self.agents = agent
