@@ -35,7 +35,7 @@ class Basic(Strategy):
         pass
 
     def move(self):
-        return ['south', 'none', 'none']
+        return ['north', 'none', 'south']
 
 
 class Random(Strategy):
