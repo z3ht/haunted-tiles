@@ -1,6 +1,7 @@
 from enum import Enum
 import random
 
+
 class Side(str, Enum):
     HOME = 'home',
     AWAY = 'away'
@@ -16,7 +17,7 @@ class Strategy:
             raise ValueError("Incorrect side value provided")
 
     def update(self, game_state):
-        pass
+        self.game_state = game_state
 
     def move(self):
         pass
@@ -34,7 +35,8 @@ class Basic(Strategy):
         pass
 
     def move(self):
-        return ['south', 'none', 'south']
+        return ['south', 'none', 'none']
+
 
 class Random(Strategy):
     def __init__(self, game_state, side):
@@ -68,6 +70,7 @@ class Random(Strategy):
             elif move == 'west' and (x - 1) < 0:
                 return False
         return True
+
 
 class RandomAvoidDeath(Random):
     def __init__(self, game_state, side):
@@ -103,3 +106,37 @@ class RandomAvoidDeath(Random):
             elif alive and move == 'none' and board[y][x] <= 1:
                 return False
         return True
+
+
+class Agent(Strategy):
+
+    def __init__(self, game_state, agent, side):
+        super().__init__(game_state, side)
+
+        self.agent = agent
+
+    def update(self, game_state):
+        super().update(game_state)
+
+    def move(self):
+        self.agent.predict(self.game_state)
+
+    def display(self):
+        pass
+
+
+class LoadModel(Strategy):
+    
+    def __init__(self, game_state, model, side):
+        super().__init__(game_state, side)
+
+        self.model = model
+
+    def update(self, game_state):
+        super().update(game_state)
+
+    def move(self):
+        pass
+
+    def display(self):
+        pass
