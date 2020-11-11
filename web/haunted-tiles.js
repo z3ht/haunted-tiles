@@ -27,20 +27,8 @@ function main(gameState, side){
 
   request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
   request.send(null);
-  const move = JSON.parse(request.responseText);
 
-  var movesWithoutDead = [];
-  var i;
-  for (i = 0; i < move.length; i++) {
-    if (gameState.teamStates[side][i].isDead) {
-      continue;
-    }
-    movesWithoutDead.push(move[i]);
-  }
-
-  console.log(movesWithoutDead);
-
-  return movesWithoutDead;
+  return JSON.parse(request.responseText);
 }
 
 function test() {
