@@ -69,8 +69,6 @@ def update():
 
     game_cache[game_id].update(game_state=game_state)
 
-    game_cache[game_id].update(game_state=game_state)
-
 @app.route('/move', methods=["GET"])
 @return_json
 def move():
@@ -81,8 +79,6 @@ def move():
 
     if game_id not in game_cache:
         abort(409)
-
-    return game_cache[game_id].move()
 
     return game_cache[game_id].move()
 
