@@ -94,7 +94,7 @@ class RandomAvoidDeath(Random):
         for move, location in zip(moves, locations):
             y = location[0]
             x = location[1]
-            alive = locations[2]
+            alive = not location[2]
             if alive and move == 'north' and board[y+1][x] <= 1:
                 return False
             elif alive and move == 'south' and board[y-1][x] <= 1:
