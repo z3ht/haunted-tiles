@@ -22,8 +22,8 @@ class TestEnvironment(Env):
 
         # 5 possible actions at a given state
         self.action_space = spaces.Discrete(5)
-
         self.state = self._get_action_space(self.game.get_game_state(include_dead_state=True))
+
 
     @staticmethod
     def _get_action_space(game_state):
