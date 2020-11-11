@@ -9,31 +9,38 @@ const strategy = "basic";
 let gameId = undefined
 
 function main(gameState, side){
-  gameState = JSON.stringify(gameState).toString();
-  side = JSON.stringify(side).toString();
+  const json_gameState = JSON.stringify(gameState).toString();
+  const json_side = JSON.stringify(side).toString();
 
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
-    const args = "&Strategy=" + strategy + "&Game-State=" + gameState + "&Side=" + side
+    const args = "&Strategy=" + strategy + "&Game-State=" + json_gameState + "&Side=" + json_side
     request.open('POST', baseUrl + "/?" + token + args, false);
     request.send(null);
     gameId = request.responseText;
   } else {
-    const args = "&Game-Id=" + gameId + "&Game-State=" + gameState + "&Side=" + side
+    const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState + "&Side=" + json_side
     request.open('POST', baseUrl + "/update?" + token + args, false);
     request.send(null);
   }
-
-  console.log(gameId);
 
   request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
   request.send(null);
   const move = JSON.parse(request.responseText);
 
-  console.log(move);
+  var movesWithoutDead = [];
+  var i;
+  for (i = 0; i < move.length; i++) {
+    if (gameState.teamStates[side][i].isDead) {
+      continue;
+    }
+    movesWithoutDead.push(move[i]);
+  }
 
-  return move;
+  console.log(movesWithoutDead);
+
+  return movesWithoutDead;
 }
 
 function test() {
