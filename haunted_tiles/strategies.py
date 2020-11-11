@@ -25,6 +25,9 @@ class Strategy:
     def move(self):
         pass
 
+    def display(self):
+        pass
+
 
 class Basic(Strategy):
 
