@@ -22,7 +22,7 @@ class HauntedTilesEnvironment(Env):
 
         # Save reinforcement learning agents used in the environment
         self.rl_agents = [agent for agent in agents if isinstance(agent, ReinforcementAgent)]
-        # TODO fix should other agents be
+
         # Save other agents used in the environment
         self.other_agents = [agent for agent in agents if not isinstance(agent, ReinforcementAgent)]
 
@@ -100,11 +100,13 @@ class HauntedTilesEnvironment(Env):
 
             rewards_n[i] = agent.calc_reward(self.game, formatted_action)
 
-            agent.update_game(self.game, formatted_action)
+            for player_ind, move in formatted_action.items():
+                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 
         for i, agent in enumerate(self.other_agents):
-            move = agent.move(self.game.get_game_state(include_dead_state=True))
-            agent.update_game(self.game, move)  # TODO figure out what this does
+            formatted_action = agent.calc_action(self.game.get_game_state(include_dead_state=True))
+            for player_ind, move in formatted_action.items():
+                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 
         self.game.update_board()
         self.game.update_dead()
@@ -112,6 +114,10 @@ class HauntedTilesEnvironment(Env):
         self.agents_obs = self._retrieve_agents_obs()
 
         episode_over = self.game.get_winner() is not Winner.NONE
+
+        if episode_over:
+            for i, agent in enumerate(self.rl_agents):
+                rewards_n[i] += agent.game_end_reward(self.game)
 
         return self.agents_obs, rewards_n, [episode_over] * len(self.rl_agents), info_n
 

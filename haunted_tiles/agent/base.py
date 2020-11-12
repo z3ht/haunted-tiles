@@ -1,89 +1,131 @@
+from haunted_tiles.strategies import Strategy
+
+import numpy as np
+
 
 class Agent:
 
-    def __init__(self):
-        pass
+    def __init__(self, side, controlled_player_inds):
+        self.side = side
+        self.controlled_player_inds = controlled_player_inds
 
-    def update_game(self, action, game):
-        pass
+    @staticmethod
+    def _valid_move(board, new_location):
+        for i in [0, 1]:
+            if len(board.board_size[i]) <= new_location[i] < 0:
+                return False
+        return True
 
 
 class ReinforcementAgent(Agent):
 
-    def __init__(self, action_space):
-        super().__init__()
+    ACTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (0, 0)]
+
+    def __init__(self, side, controlled_player_inds, action_space):
+        super().__init__(side, controlled_player_inds)
 
         self.action_space = action_space
+
+    def interpret_game_state(self, game_state):
+        board = game_state['tileStatus'].board
+
+        # team positions for living players
+        foe_side = "away" if self.side == "home" else "home"
+        friend_positions = [(player[0], player[1]) for player in game_state[self.side] if not player[2]]
+        foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
+
+        obs = []
+        for i, row in enumerate(board):
+            obs_row = []
+            for j, val in enumerate(row):
+                if (i, j) in friend_positions:
+                    obs_row.append(4)
+                elif (i, j) in foe_positions:
+                    obs_row.append(5)
+                else:
+                    obs_row.append(val)
+            obs.append(obs_row)
+
+        return np.array(obs)
+
+    def calc_reward(self, game, action):
+        return 0
+
+    def game_end_reward(self, game):
+        if game.get_winner().value == self.side:
+            return 1000
+        else:
+            return -1000
 
     def format_action(self, raw_action):
         pass
 
-    def interpret_game_state(self, game_state):
-        pass
+    def _calc_action(self, raw_action):
+        return self.ACTIONS[raw_action]
 
-    def calc_reward(self, game, action):
-        pass
+    @staticmethod
+    def _calc_location(cur_location, action):
+        return tuple([cur_location[i] + action[i] for i in range(cur_location)])
+
+
+class TeamReinforcementAgent(ReinforcementAgent):
+
+    def __init__(self, side, controlled_player_inds, action_space):
+        super().__init__(side, controlled_player_inds, action_space)
+
+    def format_action(self, raw_action):
+        actions = []
+        while (cur_action := raw_action % 5) > 0:
+            actions.append(self._calc_action(cur_action))
+            raw_action //= 5
+
+        actions_dict = {}
+        for i, action in enumerate(actions):
+            actions_dict[self.controlled_player_inds[i]] = action
+
+        return actions_dict
+
+
+class MonsterReinforcementAgent(ReinforcementAgent):
+
+    def __init__(self, side, controlled_player_ind, action_space):
+        super().__init__(side, [controlled_player_ind], action_space)
+
+    def format_action(self, raw_action):
+        return {
+            self.controlled_player_inds[0]: self._calc_action(raw_action)
+        }
 
 
 class ProceduralAgent(Agent):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, side, controlled_player_inds):
+        super().__init__(side, controlled_player_inds)
 
-    def move(self, game_state):
+    def calc_action(self, game_state):
         pass
 
-    #     # if not self._valid_move(direction, agent.get_location()):
-    #     #     return self.game_state, 5, episode_over, {}
-    # def _valid_move(self, move, location):
-    #     x = location[1]
-    #     y = location[0]
-    #     if move == 'north' and (y + 1) >= len(self.board.board):
-    #         return False
-    #     elif move == 'south' and (y - 1) < 0:
-    #         return False
-    #     elif move == 'east' and (x + 1) >= len(self.board.board[0]):
-    #         return False
-    #     elif move == 'west' and (x - 1) < 0:
-    #         return False
-    #     return True
-    #
-    # @staticmethod
-    # def _game_state_to_team_obs(game_state, side):
-    #     """
-    #     Convert game state into
-    #
-    #     :param game_state: Current game state
-    #     :param side: perspective of board ("home" or "away")
-    #
-    #     :return: observable game_state from the provided side's perspective as numpy array
-    #     """
-    #
-    #     board = game_state['tileStatus'].board
-    #
-    #     # team positions for living players
-    #     home_positions = [(player[0], player[1]) for player in game_state['home'] if not player[2]]
-    #     away_positions = [(player[0], player[1]) for player in game_state['away'] if not player[2]]
-    #
-    #     obs = []
-    #     for i, row in enumerate(board):
-    #         obs_row = []
-    #         for j, val in enumerate(row):
-    #             if (i, j) in home_positions:
-    #                 if side == "home":
-    #                     obs_row.append(4)
-    #                 else:
-    #                     obs_row.append(5)
-    #             elif (i, j) in away_positions:
-    #                 if side == "away":
-    #                     obs_row.append(4)
-    #                 else:
-    #                     obs_row.append(5)
-    #             else:
-    #                 obs_row.append(val)
-    #         obs.append(obs_row)
-    #
-    #     return np.array(obs)
+
+class StrategyAgent(ProceduralAgent):
+
+    def __init__(self, side, strategy):
+        super().__init__(side, [0, 1, 2])
+
+        if not isinstance(self.strategy, Strategy):
+            raise ValueError("strategy must be an instance of the Strategy class")
+
+        self.strategy = strategy
+
+    def calc_action(self, game_state):
+        self.strategy.update(game_state=game_state)
+
+        moves = self.strategy.move()
+
+        return {
+            0: moves[0],
+            1: moves[1],
+            2: moves[2]
+        }
 
 
 # env = HauntedTilesEnvironment([Agent], Board(BoardType.DEFAULT))
