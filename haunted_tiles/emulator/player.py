@@ -1,19 +1,29 @@
 
 
 class Player:
-    def __init__(self, y, x):
+    def __init__(self, x, y):
         self.is_dead = False
         self.y = y
         self.x = x
-        self._direction_to_move = {'south': (-1, 0), 'north': (1, 0), 'east': (0, 1), 'west': (0, -1), 'none': (0, 0)}
+        self._direction_to_move = {'south': (0, -1), 'north': (0, 1), 'east': (1, 0), 'west': (-1, 0), 'none': (0, 0)}
 
     def get_location(self):
-        return self.y, self.x
+        return self.x, self.y
 
     def move(self, direction):
+        """
+        :param direction: move direction or string
+        :return:
+        """
+        if self.is_dead:
+            return
+
         if isinstance(direction, tuple):
-            self.y += direction[0]
-            self.x += direction[1]
+            if abs(direction[0]) + abs(direction[1]) not in range(0, 2):
+                raise ValueError(f'Unexpected direction value passed into Player.move: {direction}')
+
+            self.y += direction[1]
+            self.x += direction[0]
         else:
-            self.y += self._direction_to_move[direction][0]
-            self.x += self._direction_to_move[direction][1]
+            self.y += self._direction_to_move[direction][1]
+            self.x += self._direction_to_move[direction][0]

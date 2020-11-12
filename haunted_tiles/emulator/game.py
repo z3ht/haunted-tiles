@@ -22,8 +22,8 @@ class Game:
             raise TypeError(f'Expected board to be type Board. Got type: {type(board)}')
 
         self.board = board
-        self.home_players = [Player(y, x) for y, x in board.home_start_locations]
-        self.away_players = [Player(y, x) for y, x in board.away_start_locations]
+        self.home_players = [Player(x, y) for x, y in board.home_start_locations]
+        self.away_players = [Player(x, y) for x, y in board.away_start_locations]
         self.return_dead = return_dead
         self.home_strategy = home_strategy
         self.away_strategy = away_strategy
@@ -74,18 +74,17 @@ class Game:
             if away.get_location() in broken_tiles:
                 away.is_dead = True
             # if home player not on board they are dead
-            if home.get_location()[0] not in range(self.board.board_size[0]):
+            if 0 <= home.get_location()[0] < self.board.board_size[1]:
                 home.is_dead = True
-            if home.get_location()[1] not in range(self.board.board_size[1]):
+            if 0 <= home.get_location()[1] < self.board.board_size[0]:
                 home.is_dead = True
             # if away player not on board they are dead
-            if away.get_location()[0] not in range(self.board.board_size[0]):
+            if 0 <= away.get_location()[0] < self.board.board_size[1]:
                 away.is_dead = True
-            if away.get_location()[1] not in range(self.board.board_size[1]):
+            if 0 <= away.get_location()[1] < self.board.board_size[0]:
                 away.is_dead = True
 
     def get_winner(self):
-        # TODO tie is only returned if both teams have broken the same amount of tiles
         """
         Check if all players on either team have walked died
         :return: winner enum
@@ -93,6 +92,7 @@ class Game:
         home_lost = all([home.is_dead for home in self.home_players])
         away_lost = all([away.is_dead for away in self.away_players])
         # ties only occur if teams have broken the same number of tiles
+        # TODO refactor to win based on most BROKEN tiles
         if home_lost and away_lost:
             if self.board.home_tile_damage > self.board.away_tile_damage:
                 return Winner.HOME
@@ -107,7 +107,7 @@ class Game:
         else:
             return Winner.NONE
 
-    def move_player(self, side, player_index, location):
+    def move_player(self, side, player_index, direction):
         """
         This method moves the desired monster to a new location if that location is valid
 
@@ -124,10 +124,11 @@ class Game:
         =======
         :return: None
         """
+
         if side == 'home':
-            self.home_players[player_index].move(location)
+            self.home_players[player_index].move(direction)
         elif side == 'away':
-            self.away_players[player_index].move(location)
+            self.away_players[player_index].move(direction)
         else:
             raise ValueError('Unrecognized side: away / home')
 
