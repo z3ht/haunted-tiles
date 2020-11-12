@@ -20,11 +20,11 @@ def get_basic_board():
 
 
 class Forward(Strategy):
-    def __init__(self, game_state, side):
-        super().__init__(game_state, side)
+    def __init__(self, side):
+        super().__init__(side)
 
     def update(self, game_state):
-        pass
+        super().update(game_state)
 
     def move(self):
         if self.side is Side.AWAY:
@@ -34,11 +34,11 @@ class Forward(Strategy):
 
 
 class Still(Strategy):
-    def __init__(self, game_state, side):
-        super().__init__(game_state, side)
+    def __init__(self, side):
+        super().__init__(side)
 
     def update(self, game_state):
-        pass
+        super().update(game_state)
 
     def move(self):
         return ['none', 'none', 'none']
@@ -46,15 +46,15 @@ class Still(Strategy):
 
 # check that correct side wins
 basic_board = get_basic_board()
-game = Game(basic_board, Still(), Forward())
+game = Game(basic_board, Still(side="home"), Forward(side="away"))
 assert game.play_game() is Winner.HOME
 
 basic_board = get_basic_board()
-game = Game(basic_board, Still, Still)
+game = Game(basic_board, Still(side="home"), Still(side="home"))
 assert game.play_game() is Winner.TIE
 
 basic_board = get_basic_board()
-game = Game(basic_board, Forward, Still)
+game = Game(basic_board, Forward(side="away"), Still(side="home"))
 assert game.play_game() is Winner.AWAY
 
 
@@ -68,13 +68,13 @@ basic_board.board[0][6] = 3
 # the away team immediately loses 2 players
 # the home team keeps all 3 players for 3 turns
 # the away team keeps one player for 3 turns
-game = Game(basic_board, Still, Still)
+game = Game(basic_board, Still(side="home"), Still(side="home"))
 assert game.play_game() is Winner.HOME
 
 basic_board = get_basic_board()
 basic_board.board[6][3] = 3
 basic_board.board[6][6] = 3
-game = Game(basic_board, Still, Still)
+game = Game(basic_board, Still(side="home"), Still(side="home"))
 assert game.play_game() is Winner.AWAY
 print('All tests passed')
 

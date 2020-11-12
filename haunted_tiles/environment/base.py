@@ -80,7 +80,10 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             print(row)
         print("--------------")
         print("Initial Agent obs: ")
-        print(self.agents_obs)
+        for agent, view in self.agents_obs.items():
+            print("Agent: " + agent)
+            for row in view:
+                print(row)
         print("--------------")
         time.sleep(4)
 
@@ -162,7 +165,10 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             print(row)
         print("--------------")
         print("Agent obs: ")
-        print(self.agents_obs)
+        for agent, view in self.agents_obs.items():
+            print("Agent: " + agent)
+            for row in view:
+                print(row)
         print("--------------")
         print("Rewards dict: ")
         print(rewards_dict)

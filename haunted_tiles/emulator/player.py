@@ -10,6 +10,7 @@ class Player:
     def get_location(self):
         return self.y, self.x
 
+    # Order: y, x
     def move(self, direction):
         if isinstance(direction, tuple):
             self.y += direction[0]
