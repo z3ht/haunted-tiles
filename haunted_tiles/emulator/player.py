@@ -10,6 +10,7 @@ class Player:
     def get_location(self):
         return self.x, self.y
 
+    # Order: y, x
     def move(self, direction):
         """
         :param direction: move direction or string

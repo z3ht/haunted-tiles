@@ -80,7 +80,10 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             print(row)
         print("--------------")
         print("Initial Agent obs: ")
-        print(self.agents_obs)
+        for agent, view in self.agents_obs.items():
+            print("Agent: " + agent)
+            for row in view:
+                print(row)
         print("--------------")
         time.sleep(4)
 
@@ -133,13 +136,12 @@ class HauntedTilesEnvironment(MultiAgentEnv):
                 pos_dead = self.game.get_game_state(include_dead_state=True)[agent.side][player_ind]
                 if pos_dead[-1]:
                     continue
-                new_position = agent.calc_location(pos_dead[:-1], move)
-                self.game.move_player(side=agent.side, player_index=player_ind, location=new_position)
+                self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
         for i, agent in enumerate(self.other_agents):
             formatted_action = agent.calc_moves(self.game.get_game_state(include_dead_state=True))
             for player_ind, move in formatted_action.items():
-                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
+                self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
         self.game.update_board()
         self.game.update_dead()
@@ -162,7 +164,10 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             print(row)
         print("--------------")
         print("Agent obs: ")
-        print(self.agents_obs)
+        for agent, view in self.agents_obs.items():
+            print("Agent: " + agent)
+            for row in view:
+                print(row)
         print("--------------")
         print("Rewards dict: ")
         print(rewards_dict)
