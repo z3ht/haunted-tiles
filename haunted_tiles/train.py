@@ -27,7 +27,7 @@ def calc_win_rate(model, board_type=BoardType.DEFAULT, n_trials=1000):
     print(win_prob)
 
 
-def train(save_dir, agents, board, total_timesteps=4000):
+def train(save_dir, agents, board, total_timesteps=50000):
     config = ppo.DEFAULT_CONFIG.copy()
     config['env_config'] = {
         "agents": agents,
@@ -36,29 +36,28 @@ def train(save_dir, agents, board, total_timesteps=4000):
         "action_space": Discrete(5)
     }
     config["num_gpus"] = 1
+    config["timesteps_per_iteration"] = total_timesteps
 
     trainer = ppo.PPOTrainer(config=config, env=HauntedTilesEnvironment)
-    for i in range(total_timesteps):
-        result = trainer.train()
-        if i % 100 == 0:
-            print(pretty_print(result))
+    result = pretty_print(trainer.train())
+    print(result)
 
     save = trainer.save(save_dir)
     print("model saved at: ", save)
-
-    # calc_win_rate(model)
 
 
 def basic():
     agents = [
         MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
         MonsterReinforcementAgent(name="brad", side="home", controlled_player_ind=1),
-        StrategyAgent(side="home", strategy=Still, controlled_player_inds=[2]),
-        StrategyAgent(side="away", strategy=RandomAvoidDeath)
+        MonsterReinforcementAgent(name="gamer", side="home", controlled_player_ind=2),
+        MonsterReinforcementAgent(name="exksde", side="away", controlled_player_ind=0),
+        MonsterReinforcementAgent(name="ligma", side="away", controlled_player_ind=1),
+        MonsterReinforcementAgent(name="sugma", side="away", controlled_player_ind=2)
     ]
     board = Board(board_type=BoardType.DEFAULT)
 
-    train(save_dir="./models", agents=agents, board=board)
+    train(save_dir="./models/alpha", agents=agents, board=board)
 
 
 if __name__ == "__main__":

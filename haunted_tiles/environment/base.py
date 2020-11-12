@@ -75,17 +75,17 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
 
-        print("Initial Board: ")
-        for row in self.game.board.board:
-            print(row)
-        print("--------------")
-        print("Initial Agent obs: ")
-        for agent, view in self.agents_obs.items():
-            print("Agent: " + agent)
-            for row in view:
-                print(row)
-        print("--------------")
-        time.sleep(4)
+        # print("Initial Board: ")
+        # for row in self.game.board.board:
+        #     print(row)
+        # print("--------------")
+        # print("Initial Agent obs: ")
+        # for agent, view in self.agents_obs.items():
+        #     print("Agent: " + agent)
+        #     for row in view:
+        #         print(row)
+        # print("--------------")
+        # time.sleep(4)
 
         return self.agents_obs
 
@@ -133,7 +133,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             rewards_dict[agent_name] = agent.calc_reward(self.game, formatted_action)
 
             for player_ind, move in formatted_action.items():
-                print(f"Agent: {agent_name}     Player ind: {player_ind}        Move: {move}")
+                # print(f"Agent: {agent_name}     Player ind: {player_ind}        Move: {move}")
                 self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
         for i, agent in enumerate(self.other_agents):
@@ -157,23 +157,23 @@ class HauntedTilesEnvironment(MultiAgentEnv):
                 rewards_dict[agent_name] += agent.game_end_reward(self.game)
             done_dict[agent_name] = episode_over
 
-        print("Board: ")
-        for row in self.game.board.board:
-            print(row)
-        print("--------------")
-        print("Agent obs: ")
-        for agent, view in self.agents_obs.items():
-            print("Agent: " + agent)
-            for row in view:
-                print(row)
-        print("--------------")
-        print("Rewards dict: ")
-        print(rewards_dict)
-        print("--------------")
-        print("Done dict: ")
-        print(done_dict)
-        print("--------------")
-        time.sleep(4)
+        # print("Board: ")
+        # for row in self.game.board.board:
+        #     print(row)
+        # print("--------------")
+        # print("Agent obs: ")
+        # for agent, view in self.agents_obs.items():
+        #     print("Agent: " + agent)
+        #     for row in view:
+        #         print(row)
+        # print("--------------")
+        # print("Rewards dict: ")
+        # print(rewards_dict)
+        # print("--------------")
+        # print("Done dict: ")
+        # print(done_dict)
+        # print("--------------")
+        # time.sleep(4)
 
         return self.agents_obs, rewards_dict, done_dict, info_n
 
