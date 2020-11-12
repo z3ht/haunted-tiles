@@ -1,5 +1,10 @@
 from gym.spaces import Discrete
-from stable_baselines3 import PPO
+
+import copy
+
+import ray
+from ray.rllib.agents import ppo
+from ray.tune.logger import pretty_print
 
 from haunted_tiles.agent.base import MonsterReinforcementAgent, StrategyAgent
 from haunted_tiles.environment.base import HauntedTilesEnvironment
@@ -22,46 +27,40 @@ def calc_win_rate(model, board_type=BoardType.DEFAULT, n_trials=1000):
     print(win_prob)
 
 
-def train(save_location, model=None, environment=None, total_timesteps=4000):
-    if model is None:
-        if environment is None:
-            raise ValueError("Model or environment must be provided in order to train")
-        model = PPO('MlpPolicy', environment, verbose=2)
+def train(save_dir, agents, board, total_timesteps=4000):
+    config = ppo.DEFAULT_CONFIG.copy()
+    config['env_config'] = {
+        "agents": agents,
+        "board": board,
+        "original_board": copy.deepcopy(board),
+        "action_space": Discrete(5)
+    }
+    # config["log_level"] = 'DEBUG'
 
-    model.learn(total_timesteps=total_timesteps)
+    trainer = ppo.PPOTrainer(config=config, env=HauntedTilesEnvironment)
+    for i in range(total_timesteps):
+        result = trainer.train()
+        print(pretty_print(result))
 
-    calc_win_rate(model)
+    # save = trainer.save(save_dir)
+    # print("model saved at: ", save)
 
-    model.save(save_location)
-
-    del model
+    # calc_win_rate(model)
 
 
 def basic():
     agents = [
-        MonsterReinforcementAgent(side="home", controlled_player_ind=0, action_space=Discrete(5)),
-        StrategyAgent(side="home", strategy=Still, controlled_player_inds=[1, 2]),
+        MonsterReinforcementAgent(name="bob", side="home", controlled_player_ind=0),
+        MonsterReinforcementAgent(name="fred", side="home", controlled_player_ind=1),
+        StrategyAgent(side="home", strategy=Still, controlled_player_inds=[2]),
         StrategyAgent(side="away", strategy=RandomAvoidDeath)
     ]
     board = Board(board_type=BoardType.DEFAULT)
 
-    hte = HauntedTilesEnvironment(agents=agents, board=board)
-
-    train(save_location="./model/basic.zip", environment=hte)
+    train(save_dir="./models", agents=agents, board=board)
 
 
 if __name__ == "__main__":
+    ray.init()
     basic()
 
-# env = HauntedTilesEnvironment([Agent], Board(BoardType.DEFAULT))
-#
-#
-# model.learn(total_timesteps=4000)
-#
-# obs = env.reset()
-# for i in range(1000):
-#     action, _states = model.predict(obs)
-#     obs, rewards, dones, _ = env.step(action)
-#     if dones:
-#         break
-#     env.render()

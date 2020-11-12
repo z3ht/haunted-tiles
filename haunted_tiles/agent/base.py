@@ -1,5 +1,3 @@
-from haunted_tiles.strategies import Strategy
-
 import numpy as np
 
 
@@ -21,10 +19,10 @@ class ReinforcementAgent(Agent):
 
     ACTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (0, 0)]
 
-    def __init__(self, side, controlled_player_inds, action_space):
+    def __init__(self, name, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
 
-        self.action_space = action_space
+        self.name = name
 
     def interpret_game_state(self, game_state):
         board = game_state['tileStatus'].board
@@ -35,18 +33,20 @@ class ReinforcementAgent(Agent):
         foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
 
         obs = []
-        for i, row in enumerate(board):
+        for y in range(len(board)):
             obs_row = []
-            for j, val in enumerate(row):
-                if (i, j) in friend_positions:
+            for x in range(len(board[y])):
+                if (x, y) in friend_positions:
                     obs_row.append(4)
-                elif (i, j) in foe_positions:
+                elif (x, y) in foe_positions:
                     obs_row.append(5)
                 else:
+                    val = board[y][x]
                     obs_row.append(val)
+                    print(val)
             obs.append(obs_row)
 
-        return np.array(obs)
+        return obs
 
     def calc_reward(self, game, action):
         return 0
@@ -70,8 +70,8 @@ class ReinforcementAgent(Agent):
 
 class TeamReinforcementAgent(ReinforcementAgent):
 
-    def __init__(self, side, controlled_player_inds, action_space):
-        super().__init__(side, controlled_player_inds, action_space)
+    def __init__(self, name, side, controlled_player_inds):
+        super().__init__(name, side, controlled_player_inds)
 
     def format_action(self, raw_action):
         actions = []
@@ -88,8 +88,8 @@ class TeamReinforcementAgent(ReinforcementAgent):
 
 class MonsterReinforcementAgent(ReinforcementAgent):
 
-    def __init__(self, side, controlled_player_ind, action_space):
-        super().__init__(side, [controlled_player_ind], action_space)
+    def __init__(self, name, side, controlled_player_ind):
+        super().__init__(name, side, [controlled_player_ind])
 
     def format_action(self, raw_action):
         return {
