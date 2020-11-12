@@ -8,6 +8,7 @@ Team: **¯\_(ツ)_/¯**
 ## Usage:
 Ensure all of the below requirements are satisfied before attempting to setup an environment:
 - `python3` for running Python code  (development and production)
+- `rllib` for the reinforcement learning
 - Environment Variables [`setup` will take care of this] (development and production) :
     - `HAUNTED_TILES_API_TOKEN` → Haunted Tiles secret key (set to: `ep1c-t0ken`)
 - `systemd` host (production)

@@ -44,7 +44,7 @@ class BoardType(Enum):
 class Board:
     def __init__(self, board_type):
 
-        self.board = board_type.value
+        self.board = board_type.value[0]
         self.home_start_locations = [(0, 0), (0, 3), (0, 6)]
         self.away_start_locations = [(6, 0), (6, 3), (6, 6)]
         self.board_size = (7, 7)
@@ -58,6 +58,10 @@ class Board:
         :param player_locations: iterable of all player locations
         """
         for y, x in home_player_locations:
+            if not (0 <= y < len(self.board)):
+                continue
+            if not (0 <= x < len(self.board[y])):
+                continue
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
                 self.home_tile_damage += 1
@@ -65,6 +69,10 @@ class Board:
                 self.broken_tiles.add((y, x))
 
         for y, x in away_player_locations:
+            if not (0 <= y < len(self.board)):
+                continue
+            if not (0 <= x < len(self.board[y])):
+                continue
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
                 self.away_tile_damage += 1

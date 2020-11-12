@@ -15,15 +15,15 @@ function main(gameState, side){
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
-    const args = "&Strategy=" + strategy + "&Game-State=" + json_gameState + "&Side=" + json_side
+    const args = "&Strategy=" + strategy + "&Side=" + json_side
     request.open('POST', baseUrl + "/?" + token + args, false);
     request.send(null);
     gameId = request.responseText;
-  } else {
-    const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState + "&Side=" + json_side
-    request.open('POST', baseUrl + "/update?" + token + args, false);
-    request.send(null);
   }
+
+  const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState
+  request.open('POST', baseUrl + "/update?" + token + args, false);
+  request.send(null);
 
   request.open('GET', baseUrl + "/move?" + token + "&Game-Id=" + gameId, false);
   request.send(null);

@@ -1,6 +1,5 @@
 from haunted_tiles.emulator.board import Board
 from haunted_tiles.emulator.player import Player
-from haunted_tiles.strategies import Side
 from enum import Enum
 
 
@@ -13,7 +12,7 @@ class Winner(str, Enum):
 
 class Game:
 
-    def __init__(self, board, home_strategy=None, away_strategy=None, return_dead=False):
+    def __init__(self, board, home_strategy, away_strategy, return_dead=False):
         """
         :param board: board object
         :param home_strategy: Strategy object for home team (default: call move manually)
@@ -26,8 +25,8 @@ class Game:
         self.home_players = [Player(y, x) for y, x in board.home_start_locations]
         self.away_players = [Player(y, x) for y, x in board.away_start_locations]
         self.return_dead = return_dead
-        self.home_strategy = home_strategy(self.get_game_state(return_dead), Side.HOME)
-        self.away_strategy = away_strategy(self.get_game_state(return_dead), Side.AWAY)
+        self.home_strategy = home_strategy
+        self.away_strategy = away_strategy
 
     def play_game(self):
         """
@@ -125,15 +124,12 @@ class Game:
         =======
         :return: None
         """
-        if 0 < location[0] < self.board.board_size[0] and 0 < location[1] < self.board.board_size[1]:
-            if side == 'home':
-                self.home_strategy[player_index].move(location)
-            elif side == 'away':
-                self.home_strategy[player_index].move(location)
-            else:
-                raise ValueError('Unrecognized side: away / home')
+        if side == 'home':
+            self.home_players[player_index].move(location)
+        elif side == 'away':
+            self.away_players[player_index].move(location)
         else:
-            raise ValueError('Unrecognized location')
+            raise ValueError('Unrecognized side: away / home')
 
     def get_game_state(self, include_dead_state=False):
         """

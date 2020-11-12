@@ -11,5 +11,9 @@ class Player:
         return self.y, self.x
 
     def move(self, direction):
-        self.y += self._direction_to_move[direction][0]
-        self.x += self._direction_to_move[direction][1]
+        if isinstance(direction, tuple):
+            self.y += direction[0]
+            self.x += direction[1]
+        else:
+            self.y += self._direction_to_move[direction][0]
+            self.x += self._direction_to_move[direction][1]

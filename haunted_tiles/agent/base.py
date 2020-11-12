@@ -1,5 +1,3 @@
-from haunted_tiles.strategies import Strategy
-
 import numpy as np
 
 
@@ -19,12 +17,13 @@ class Agent:
 
 class ReinforcementAgent(Agent):
 
-    ACTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (0, 0)]
+    # y,x because emulator is troglodytic
+    ACTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1), (0, 0)]
 
-    def __init__(self, side, controlled_player_inds, action_space):
+    def __init__(self, name, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
 
-        self.action_space = action_space
+        self.name = name
 
     def interpret_game_state(self, game_state):
         board = game_state['tileStatus'].board
@@ -35,18 +34,19 @@ class ReinforcementAgent(Agent):
         foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
 
         obs = []
-        for i, row in enumerate(board):
+        for y in range(len(board)):
             obs_row = []
-            for j, val in enumerate(row):
-                if (i, j) in friend_positions:
+            for x in range(len(board[y])):
+                if (x, y) in friend_positions:
                     obs_row.append(4)
-                elif (i, j) in foe_positions:
+                elif (x, y) in foe_positions:
                     obs_row.append(5)
                 else:
+                    val = board[y][x]
                     obs_row.append(val)
             obs.append(obs_row)
 
-        return np.array(obs)
+        return obs
 
     def calc_reward(self, game, action):
         return 0
@@ -64,14 +64,14 @@ class ReinforcementAgent(Agent):
         return self.ACTIONS[raw_action]
 
     @staticmethod
-    def _calc_location(cur_location, action):
-        return tuple([cur_location[i] + action[i] for i in range(cur_location)])
+    def calc_location(cur_location, action):
+        return tuple([cur_location[i] + action[i] for i in range(len(cur_location))])
 
 
 class TeamReinforcementAgent(ReinforcementAgent):
 
-    def __init__(self, side, controlled_player_inds, action_space):
-        super().__init__(side, controlled_player_inds, action_space)
+    def __init__(self, name, side, controlled_player_inds):
+        super().__init__(name, side, controlled_player_inds)
 
     def format_action(self, raw_action):
         actions = []
@@ -88,8 +88,8 @@ class TeamReinforcementAgent(ReinforcementAgent):
 
 class MonsterReinforcementAgent(ReinforcementAgent):
 
-    def __init__(self, side, controlled_player_ind, action_space):
-        super().__init__(side, [controlled_player_ind], action_space)
+    def __init__(self, name, side, controlled_player_ind):
+        super().__init__(name, side, [controlled_player_ind])
 
     def format_action(self, raw_action):
         return {
@@ -102,41 +102,27 @@ class ProceduralAgent(Agent):
     def __init__(self, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
 
-    def calc_action(self, game_state):
+    def calc_moves(self, game_state):
         pass
 
 
 class StrategyAgent(ProceduralAgent):
 
-    def __init__(self, side, strategy):
-        super().__init__(side, [0, 1, 2])
+    def __init__(self, side, strategy, controlled_player_inds=None):
+        if controlled_player_inds is None:
+            controlled_player_inds = [0, 1, 2]
 
-        if not isinstance(self.strategy, Strategy):
-            raise ValueError("strategy must be an instance of the Strategy class")
+        super().__init__(side, controlled_player_inds)
 
-        self.strategy = strategy
+        self.strategy = strategy(side=side)
 
-    def calc_action(self, game_state):
+    def calc_moves(self, game_state):
         self.strategy.update(game_state=game_state)
 
         moves = self.strategy.move()
 
-        return {
-            0: moves[0],
-            1: moves[1],
-            2: moves[2]
-        }
+        moves_dict = {}
+        for player_ind in self.controlled_player_inds:
+            moves_dict[player_ind] = moves[player_ind]
 
-
-# env = HauntedTilesEnvironment([Agent], Board(BoardType.DEFAULT))
-#
-# model = PPO('mlppolicy', env, verbose=2)
-# model.learn(total_timesteps=4000)
-#
-# obs = env.reset()
-# for i in range(1000):
-#     action, _states = model.predict(obs)
-#     obs, rewards, dones, _ = env.step(action)
-#     if dones:
-#         break
-#     env.render()
+        return moves_dict

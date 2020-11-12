@@ -1,110 +1,143 @@
-from gym import Env, spaces
-import numpy as np
+import time
+
+from gym import spaces
+
+from ray.rllib.env.multi_agent_env import MultiAgentEnv
+
 from haunted_tiles.emulator.game import Game, Winner
 from haunted_tiles.agent.base import ReinforcementAgent
+from haunted_tiles.strategies import Still
 
 
-class HauntedTilesEnvironment(Env):
+class HauntedTilesEnvironment(MultiAgentEnv):
 
-    def __init__(self, agents, board, observation_space=None):
+    metadata = {'render.modes': ['human', 'rgb_array']}
+
+    def __init__(self, env_config):
         """
         Initialize a Haunted Tiles environment
 
         Params
         ======
-        :param agents: List of agents that will be controlling monsters (supports reinforcement and procedural)
-        :param board: The board that the game should begin with
-        :param observation_space :
-                    Shape/metadata about the provided agents' observable space
-                    By default, agents observe the whole board where 0-3 are empty tiles with their damage amount,
-                                                  4 denotes friendly player locations, and 5 for enemy player
+        :param env_config : Environment configuration
+                Parameters:
+                    agents : List of agents that will be controlling monsters (supports reinforcement and procedural)
+                    board : The board that the game should begin with
+                    original_board : (optional) copy of the board to pass in
+                    observation_space : (optional)
+                            Shape/metadata about the provided agents' observable space
+                            By default, agents observe the whole board where 0-3 are empty tiles with their damage
+                                                    amount, 4 denotes friendly player locations, and 5 for enemy player
+                    action_space :
+                            Shape of the number of actions an agent can take. This must be uniform for all agents
         """
+        agents = env_config["agents"]
+        board = env_config["board"]
+        original_board = env_config["original_board"]
+        action_space = env_config["action_space"]
 
         # Save reinforcement learning agents used in the environment
-        self.rl_agents = [agent for agent in agents if isinstance(agent, ReinforcementAgent)]
+        self.agents = {}
+        for agent in agents:
+            if not isinstance(agent, ReinforcementAgent):
+                continue
+            self.agents[agent.name] = agent
+        self.num_agents = len(self.agents)
 
         # Save other agents used in the environment
         self.other_agents = [agent for agent in agents if not isinstance(agent, ReinforcementAgent)]
 
         # Save board and original_board
         self.board = board
-        self.original_board = self.board.copy()
+        self.original_board = original_board
 
-        if observation_space is None:
+        # Set action space
+        self.action_space = action_space
+
+        if "observation_space" in env_config:
+            self.observation_space = env_config["observation_space"]
+        else:
             # By default, observe the whole board 0-3 are empty tiles with their damage amount,
             #                                     4 for friendlies, 5 for enemies
             board_size = self.board.board_size
-            observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]), dtype=np.uint8)
-
-        # Set observation space
-        self.observation_space = observation_space
+            self.observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]))
 
         # Create game
-        self.game = Game(self.board, True)
-
-        # Action spaces for all agents
-        self.action_spaces = [agent.action_space for agent in self.rl_agents]
+        self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
 
     def reset(self):
         self.board = self.original_board
-        self.game = Game(self.board, True)
+        self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
 
+        print("Initial Board: ")
+        for row in self.game.board.board:
+            print(row)
+        print("--------------")
+        print("Initial Agent obs: ")
+        print(self.agents_obs)
+        print("--------------")
+        time.sleep(4)
+
         return self.agents_obs
 
-    def step(self, action_n):
+    def step(self, actions_dict):
         """
-        Determine how good every rl_agents' moves are
+        Determine how good every agents' moves are
 
         Parameters
         ----------
-        action_n : List of actions each rl_agent made
+        :param actions_dict : Dictionary where keys are agent names and values are their corresponding action
 
         Returns
         -------
         obs_n, reward_n, done_n, info_n : tuple
-            obs_n (list[object]) :
-                list of environment-specific objects representing all agents' observation of
-                the environment.
-            reward_n (float) :
-                list of rewards achieved by each previous action.
+            obs_n (dict[agent.name] = int) :
+                dict containing all agents' observation of the environment
+            reward_n (dict[agent.name] = float) :
+                dict of rewards achieved by each previous action.
                 Note: The scale varies between environments, but the goal is always to increase
                     total reward.
-            done_n (bool) :
-                list denoting whether or not each agent should be reset.
+            done_n (dict[agent.name] = bool) :
+                dict denoting whether or not each agent should be reset.
                 Note: if the environment should be reset for one agent, then every agent's
                     environment must also be reset
             info_n (dict) :
-                 list of every agent's diagnostic information (useful for debugging).
+                 dict of diagnostic information (useful for debugging).
                  Note: This can sometimes be useful for learning (for example, it might contain the raw
                         probabilities behind the environment's last state change).
                         However, official evaluations of your agent are not allowed to use this for learning.
         """
-
-        rewards_n = [0] * len(self.rl_agents)
+        rewards_dict = {}
+        for agent in self.agents.values():
+            rewards_dict[agent.name] = 0
 
         # Its best to create a wrapper and add to info rather than modifying info here directly
         # More info on wrappers:
         # https://github.com/araffin/rl-tutorial-jnrr19/blob/sb3/2_gym_wrappers_saving_loading.ipynb
-        info_n = [None] * len(self.rl_agents)
+        info_n = {}
 
-        for i, action in enumerate(action_n):
-            agent = self.rl_agents[i]
+        for agent_name, action in actions_dict.items():
+            agent = self.agents[agent_name]
 
             formatted_action = agent.format_action(action)
 
-            rewards_n[i] = agent.calc_reward(self.game, formatted_action)
+            rewards_dict[agent_name] = agent.calc_reward(self.game, formatted_action)
 
             for player_ind, move in formatted_action.items():
-                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
+                pos_dead = self.game.get_game_state(include_dead_state=True)[agent.side][player_ind]
+                if pos_dead[-1]:
+                    continue
+                new_position = agent.calc_location(pos_dead[:-1], move)
+                self.game.move_player(side=agent.side, player_index=player_ind, location=new_position)
 
         for i, agent in enumerate(self.other_agents):
-            formatted_action = agent.calc_action(self.game.get_game_state(include_dead_state=True))
+            formatted_action = agent.calc_moves(self.game.get_game_state(include_dead_state=True))
             for player_ind, move in formatted_action.items():
                 self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 
@@ -115,13 +148,33 @@ class HauntedTilesEnvironment(Env):
 
         episode_over = self.game.get_winner() is not Winner.NONE
 
-        if episode_over:
-            for i, agent in enumerate(self.rl_agents):
-                rewards_n[i] += agent.game_end_reward(self.game)
+        done_dict = {
+            '__all__': episode_over
+        }
 
-        return self.agents_obs, rewards_n, [episode_over] * len(self.rl_agents), info_n
+        for agent_name, agent in self.agents.items():
+            if episode_over:
+                rewards_dict[agent_name] += agent.game_end_reward(self.game)
+            done_dict[agent_name] = episode_over
 
-    def render(self, mode='human', close=False):
+        print("Board: ")
+        for row in self.game.board.board:
+            print(row)
+        print("--------------")
+        print("Agent obs: ")
+        print(self.agents_obs)
+        print("--------------")
+        print("Rewards dict: ")
+        print(rewards_dict)
+        print("--------------")
+        print("Done dict: ")
+        print(done_dict)
+        print("--------------")
+        time.sleep(4)
+
+        return self.agents_obs, rewards_dict, done_dict, info_n
+
+    def render(self):
         print(self.game.get_game_state())
 
     def _retrieve_agents_obs(self, agents=None):
@@ -138,10 +191,10 @@ class HauntedTilesEnvironment(Env):
         """
 
         if agents is None:
-            agents = self.rl_agents
+            agents = self.agents
 
-        agents_obs = []
-        for agent in agents:
-            agents_obs.append(agent.interpret_game_state(self.game.get_game_state(include_dead_state=True)))
+        agents_obs = {}
+        for name, agent in agents.items():
+            agents_obs[agent.name] = agent.interpret_game_state(self.game.get_game_state(include_dead_state=True))
 
-        return np.array([agents_obs])
+        return agents_obs
