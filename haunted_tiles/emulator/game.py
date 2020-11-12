@@ -26,8 +26,8 @@ class Game:
         self.home_players = [Player(y, x) for y, x in board.home_start_locations]
         self.away_players = [Player(y, x) for y, x in board.away_start_locations]
         self.return_dead = return_dead
-        self.home_strategy = home_strategy(self.get_game_state(return_dead), Side.HOME)
-        self.away_strategy = away_strategy(self.get_game_state(return_dead), Side.AWAY)
+        self.home_strategy = home_strategy
+        self.away_strategy = away_strategy
 
     def play_game(self):
         """

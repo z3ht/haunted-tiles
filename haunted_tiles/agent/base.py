@@ -102,41 +102,27 @@ class ProceduralAgent(Agent):
     def __init__(self, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
 
-    def calc_move(self, game_state):
+    def calc_moves(self, game_state):
         pass
 
 
 class StrategyAgent(ProceduralAgent):
 
-    def __init__(self, side, strategy):
-        super().__init__(side, [0, 1, 2])
+    def __init__(self, side, strategy, controlled_player_inds=None):
+        if controlled_player_inds is None:
+            controlled_player_inds = [0, 1, 2]
 
-        if not isinstance(self.strategy, Strategy):
-            raise ValueError("strategy must be an instance of the Strategy class")
+        super().__init__(side, controlled_player_inds)
 
-        self.strategy = strategy
+        self.strategy = strategy(side=side)
 
-    def calc_move(self, game_state):
+    def calc_moves(self, game_state):
         self.strategy.update(game_state=game_state)
 
         moves = self.strategy.move()
 
-        return {
-            0: moves[0],
-            1: moves[1],
-            2: moves[2]
-        }
+        moves_dict = {}
+        for player_ind in self.controlled_player_inds:
+            moves_dict[player_ind] = moves[player_ind]
 
-
-# env = HauntedTilesEnvironment([Agent], Board(BoardType.DEFAULT))
-#
-# model = PPO('mlppolicy', env, verbose=2)
-# model.learn(total_timesteps=4000)
-#
-# obs = env.reset()
-# for i in range(1000):
-#     action, _states = model.predict(obs)
-#     obs, rewards, dones, _ = env.step(action)
-#     if dones:
-#         break
-#     env.render()
+        return moves_dict

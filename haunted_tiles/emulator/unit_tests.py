@@ -46,7 +46,7 @@ class Still(Strategy):
 
 # check that correct side wins
 basic_board = get_basic_board()
-game = Game(basic_board, Still, Forward)
+game = Game(basic_board, Still(), Forward())
 assert game.play_game() is Winner.HOME
 
 basic_board = get_basic_board()

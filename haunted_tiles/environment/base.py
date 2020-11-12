@@ -1,7 +1,10 @@
 from gym import Env, spaces
 import numpy as np
+
 from haunted_tiles.emulator.game import Game, Winner
 from haunted_tiles.agent.base import ReinforcementAgent
+from haunted_tiles.utils import MultiAgentActionSpace, MultiAgentObservationSpace
+import copy
 
 
 class HauntedTilesEnvironment(Env):
@@ -12,8 +15,8 @@ class HauntedTilesEnvironment(Env):
 
         Params
         ======
-        :param agents: List of agents that will be controlling monsters (supports reinforcement and procedural)
-        :param board: The board that the game should begin with
+        :param agents : List of agents that will be controlling monsters (supports reinforcement and procedural)
+        :param board : The board that the game should begin with
         :param observation_space :
                     Shape/metadata about the provided agents' observable space
                     By default, agents observe the whole board where 0-3 are empty tiles with their damage amount,
@@ -28,13 +31,14 @@ class HauntedTilesEnvironment(Env):
 
         # Save board and original_board
         self.board = board
-        self.original_board = self.board.copy()
+        self.original_board = copy.deepcopy(self.board)
 
         if observation_space is None:
             # By default, observe the whole board 0-3 are empty tiles with their damage amount,
             #                                     4 for friendlies, 5 for enemies
             board_size = self.board.board_size
-            observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]), dtype=np.uint8)
+            observation_space_part = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]), dtype=np.uint8)
+            observation_space = MultiAgentObservationSpace([observation_space_part] * len(self.rl_agents))
 
         # Set observation space
         self.observation_space = observation_space
@@ -43,7 +47,8 @@ class HauntedTilesEnvironment(Env):
         self.game = Game(self.board, True)
 
         # Action spaces for all agents
-        self.action_spaces = [agent.action_space for agent in self.rl_agents]
+        self.discrete_action_space = True
+        self.action_space = MultiAgentActionSpace([agent.action_space for agent in self.rl_agents])
 
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
@@ -63,7 +68,7 @@ class HauntedTilesEnvironment(Env):
 
         Parameters
         ----------
-        action_n : List of actions each rl_agent made
+        :param action_n : List of actions each rl_agent made
 
         Returns
         -------
@@ -105,7 +110,7 @@ class HauntedTilesEnvironment(Env):
                 self.game.move_player(side=agent.side, player_index=player_ind, location=new_position)
 
         for i, agent in enumerate(self.other_agents):
-            formatted_action = agent.calc_move(self.game.get_game_state(include_dead_state=True))
+            formatted_action = agent.calc_moves(self.game.get_game_state(include_dead_state=True))
             for player_ind, move in formatted_action.items():
                 self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 

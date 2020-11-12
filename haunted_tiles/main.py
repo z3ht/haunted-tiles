@@ -41,16 +41,12 @@ def create_game():
     if strategy not in available_strategies:
         abort(400)
 
-    if "Game-State" not in request.args:
-        abort(400)
-
     if side not in ['home', 'away']:
         abort(400)
 
-    game_state = format_game_state(request.args["Game-State"])
     game_id = uuid.uuid4().hex.lower()[0:6]
 
-    game_cache[game_id] = available_strategies[strategy](game_state=game_state, side=side)
+    game_cache[game_id] = available_strategies[strategy](side=side)
 
     return game_id
 
