@@ -17,8 +17,8 @@ class Agent:
 
 class ReinforcementAgent(Agent):
 
-    # y,x because emulator is troglodytic
-    ACTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1), (0, 0)]
+    # x, y
+    ACTIONS = [(0, 1), (1, 0), (-1, 0), (-1, 0), (0, 0)]
 
     def __init__(self, name, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
