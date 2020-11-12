@@ -22,7 +22,7 @@ class HauntedTilesEnvironment(Env):
 
         # Save reinforcement learning agents used in the environment
         self.rl_agents = [agent for agent in agents if isinstance(agent, ReinforcementAgent)]
-
+        # TODO fix should other agents be
         # Save other agents used in the environment
         self.other_agents = [agent for agent in agents if not isinstance(agent, ReinforcementAgent)]
 
@@ -104,7 +104,7 @@ class HauntedTilesEnvironment(Env):
 
         for i, agent in enumerate(self.other_agents):
             move = agent.move(self.game.get_game_state(include_dead_state=True))
-            agent.update_game(self.game, move)
+            agent.update_game(self.game, move)  # TODO figure out what this does
 
         self.game.update_board()
         self.game.update_dead()
