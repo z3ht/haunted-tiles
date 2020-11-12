@@ -17,7 +17,8 @@ class Agent:
 
 class ReinforcementAgent(Agent):
 
-    ACTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (0, 0)]
+    # y,x because emulator is troglodytic
+    ACTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1), (0, 0)]
 
     def __init__(self, name, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
@@ -43,7 +44,6 @@ class ReinforcementAgent(Agent):
                 else:
                     val = board[y][x]
                     obs_row.append(val)
-                    print(val)
             obs.append(obs_row)
 
         return obs
@@ -65,7 +65,7 @@ class ReinforcementAgent(Agent):
 
     @staticmethod
     def calc_location(cur_location, action):
-        return tuple([cur_location[i] + action[i] for i in range(cur_location)])
+        return tuple([cur_location[i] + action[i] for i in range(len(cur_location))])
 
 
 class TeamReinforcementAgent(ReinforcementAgent):

@@ -4,6 +4,7 @@ from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
 from haunted_tiles.emulator.game import Game, Winner
 from haunted_tiles.agent.base import ReinforcementAgent
+from haunted_tiles.strategies import Still
 
 
 class HauntedTilesEnvironment(MultiAgentEnv):
@@ -60,14 +61,14 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             self.observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]))
 
         # Create game
-        self.game = Game(self.board, True)
+        self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
 
     def reset(self):
         self.board = self.original_board
-        self.game = Game(self.board, True)
+        self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
@@ -102,7 +103,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
                         However, official evaluations of your agent are not allowed to use this for learning.
         """
         rewards_dict = {}
-        for agent in self.agents:
+        for agent in self.agents.values():
             rewards_dict[agent.name] = 0
 
         # Its best to create a wrapper and add to info rather than modifying info here directly
@@ -118,7 +119,10 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             rewards_dict[agent_name] = agent.calc_reward(self.game, formatted_action)
 
             for player_ind, move in formatted_action.items():
-                new_position = agent.calc_location(self.game.get_game_state()[agent.side][player_ind], move)
+                pos_dead = self.game.get_game_state(include_dead_state=True)[agent.side][player_ind]
+                if pos_dead[-1]:
+                    continue
+                new_position = agent.calc_location(pos_dead[:-1], move)
                 self.game.move_player(side=agent.side, player_index=player_ind, location=new_position)
 
         for i, agent in enumerate(self.other_agents):
@@ -133,12 +137,14 @@ class HauntedTilesEnvironment(MultiAgentEnv):
 
         episode_over = self.game.get_winner() is not Winner.NONE
 
-        done_dict = {}
+        done_dict = {
+            '__all__': episode_over
+        }
 
-        if episode_over:
-            for agent_name, agent in self.agents.items():
+        for agent_name, agent in self.agents.items():
+            if episode_over:
                 rewards_dict[agent_name] += agent.game_end_reward(self.game)
-                done_dict[agent_name] = True
+            done_dict[agent_name] = episode_over
 
         return self.agents_obs, rewards_dict, done_dict, info_n
 

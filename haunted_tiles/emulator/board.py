@@ -58,6 +58,10 @@ class Board:
         :param player_locations: iterable of all player locations
         """
         for y, x in home_player_locations:
+            if not (0 <= y < len(self.board)):
+                continue
+            if not (0 <= x < len(self.board[y])):
+                continue
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
                 self.home_tile_damage += 1
@@ -65,6 +69,10 @@ class Board:
                 self.broken_tiles.add((y, x))
 
         for y, x in away_player_locations:
+            if not (0 <= y < len(self.board)):
+                continue
+            if not (0 <= x < len(self.board[y])):
+                continue
             if self.board[y][x] > 0:
                 self.board[y][x] -= 1
                 self.away_tile_damage += 1
