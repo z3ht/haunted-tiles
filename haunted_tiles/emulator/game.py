@@ -68,22 +68,16 @@ class Game:
         If players are in a position that results in death set the player to dead
         """
         broken_tiles = self.board.broken_tiles
-        for home, away in zip(self.home_players, self.away_players):
+        for player in self.home_players + self.away_players:
             # check if either on broken tiles they are dead
-            if home.get_location() in broken_tiles:
-                home.is_dead = True
-            if away.get_location() in broken_tiles:
-                away.is_dead = True
+            if player.get_location() in broken_tiles:
+                player.is_dead = True
             # if home player not on board they are dead
-            if 0 <= home.get_location()[0] < self.board.board_size[1]:
-                home.is_dead = True
-            if 0 <= home.get_location()[1] < self.board.board_size[0]:
-                home.is_dead = True
             # if away player not on board they are dead
-            if 0 <= away.get_location()[0] < self.board.board_size[1]:
-                away.is_dead = True
-            if 0 <= away.get_location()[1] < self.board.board_size[0]:
-                away.is_dead = True
+            if 0 > player.get_location()[0] or player.get_location()[0] >= self.board.board_size[1]:
+                player.is_dead = True
+            if 0 > player.get_location()[1] or player.get_location()[1] >= self.board.board_size[0]:
+                player.is_dead = True
 
     def get_winner(self):
         """

@@ -15,7 +15,8 @@ def get_basic_board():
     for y in range(basic_board.board_size[0]):
         for x in range(basic_board.board_size[1]):
             if basic_board.board[y][x] == 0:
-                basic_board.broken_tiles.add((y, x))
+                basic_board.broken_tiles.add((x, y))
+
     return basic_board
 
 
@@ -44,13 +45,13 @@ class Still(Strategy):
         return ['none', 'none', 'none']
 
 
-# check that correct side wins
-basic_board = get_basic_board()
-game = Game(basic_board, Still(side="home"), Forward(side="away"))
-assert game.play_game() is Winner.HOME
+# # check that correct side wins
+# basic_board = get_basic_board()
+# game = Game(basic_board, Still(side="home"), Forward(side="away"))
+# assert game.play_game() is Winner.HOME
 
 basic_board = get_basic_board()
-game = Game(basic_board, Still(side="home"), Still(side="home"))
+game = Game(basic_board, Still(side="home"), Still(side="away"))
 assert game.play_game() is Winner.TIE
 
 basic_board = get_basic_board()
@@ -77,5 +78,21 @@ basic_board.board[6][6] = 3
 game = Game(basic_board, Still(side="home"), Still(side="home"))
 assert game.play_game() is Winner.AWAY
 print('All tests passed')
+
+
+basic_board = Board(board_type=BoardType.DEFAULT)
+game = Game(basic_board, Still(side='home'), Forward(side='away'), return_dead=True)
+
+for i in range(3):
+    game.move_player('home', 0, (0, 1))
+    game.move_player('home', 1, (0, 1))
+    game.move_player('home', 2, (0, 1))
+    game.update_board()
+    game.update_dead()
+    print(game.get_game_state()['home'])
+    if game.get_winner():
+        print(game.get_winner())
+        break
+
 
 
