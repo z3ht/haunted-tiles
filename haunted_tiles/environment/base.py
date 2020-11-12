@@ -115,6 +115,10 @@ class HauntedTilesEnvironment(Env):
 
         episode_over = self.game.get_winner() is not Winner.NONE
 
+        if episode_over:
+            for i, agent in enumerate(self.rl_agents):
+                rewards_n[i] += agent.game_end_reward(self.game)
+
         return self.agents_obs, rewards_n, [episode_over] * len(self.rl_agents), info_n
 
     def render(self, mode='human', close=False):
