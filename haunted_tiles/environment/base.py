@@ -100,11 +100,13 @@ class HauntedTilesEnvironment(Env):
 
             rewards_n[i] = agent.calc_reward(self.game, formatted_action)
 
-            agent.update_game(self.game, formatted_action)
+            for player_ind, move in formatted_action.items():
+                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 
         for i, agent in enumerate(self.other_agents):
-            move = agent.move(self.game.get_game_state(include_dead_state=True))
-            agent.update_game(self.game, move)
+            formatted_action = agent.calc_action(self.game.get_game_state(include_dead_state=True))
+            for player_ind, move in formatted_action.items():
+                self.game.move_player(side=agent.side, player_index=player_ind, location=move)
 
         self.game.update_board()
         self.game.update_dead()
