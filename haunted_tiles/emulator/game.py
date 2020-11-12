@@ -43,9 +43,9 @@ class Game:
         """
         Get moves of players and move players
         """
-        game_state = self.get_game_state(self.return_dead)
+        game_state = self.get_game_state()
         self.home_strategy.update(game_state=game_state)
-        self.away_strategy.update(game_state=self.get_game_state(self.return_dead))
+        self.away_strategy.update(game_state=self.get_game_state())
         home_1_move, home_2_move, home_3_move = self.home_strategy.move()
         away_1_move, away_2_move, away_3_move = self.away_strategy.move()
         self.home_players[0].move(home_1_move)
@@ -133,12 +133,11 @@ class Game:
         else:
             raise ValueError('Unrecognized side: away / home')
 
-    def get_game_state(self, include_dead_state=False):
+    def get_game_state(self):
         """
-        :param include_dead_state: include dead players and status in return or exclude dead players
         :return: same format as described in preprocessing.format_game_state
         """
-        if not include_dead_state:
+        if not self.return_dead:
             return {'tileStatus': self.board,
                     'home': [plyr.get_location() for plyr in self.home_players if not plyr.is_dead],
                     'away': [plyr.get_location() for plyr in self.away_players if not plyr.is_dead],

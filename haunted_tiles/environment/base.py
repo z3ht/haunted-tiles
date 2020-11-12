@@ -133,13 +133,11 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             rewards_dict[agent_name] = agent.calc_reward(self.game, formatted_action)
 
             for player_ind, move in formatted_action.items():
-                pos_dead = self.game.get_game_state(include_dead_state=True)[agent.side][player_ind]
-                if pos_dead[-1]:
-                    continue
+                print(f"Agent: {agent_name}     Player ind: {player_ind}        Move: {move}")
                 self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
         for i, agent in enumerate(self.other_agents):
-            formatted_action = agent.calc_moves(self.game.get_game_state(include_dead_state=True))
+            formatted_action = agent.calc_moves(self.game.get_game_state())
             for player_ind, move in formatted_action.items():
                 self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
@@ -200,6 +198,6 @@ class HauntedTilesEnvironment(MultiAgentEnv):
 
         agents_obs = {}
         for name, agent in agents.items():
-            agents_obs[agent.name] = agent.interpret_game_state(self.game.get_game_state(include_dead_state=True))
+            agents_obs[agent.name] = agent.interpret_game_state(self.game.get_game_state())
 
         return agents_obs

@@ -54,8 +54,8 @@ class Board:
 
     def damage_tiles(self, home_player_locations, away_player_locations):
         """
-        :param player_locations: all player locations as a tuple (x, y)
-        :param player_locations: iterable of all player locations
+        :param home_player_locations: all player locations as a tuple (x, y)
+        :param away_player_locations: iterable of all player locations
         """
         for x, y in home_player_locations:
             if not (0 <= y < len(self.board)):

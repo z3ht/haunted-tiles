@@ -51,8 +51,8 @@ def train(save_dir, agents, board, total_timesteps=4000):
 
 def basic():
     agents = [
-        MonsterReinforcementAgent(name="bob", side="home", controlled_player_ind=0),
-        MonsterReinforcementAgent(name="fred", side="home", controlled_player_ind=1),
+        MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
+        MonsterReinforcementAgent(name="brad", side="home", controlled_player_ind=1),
         StrategyAgent(side="home", strategy=Still, controlled_player_inds=[2]),
         StrategyAgent(side="away", strategy=RandomAvoidDeath)
     ]
