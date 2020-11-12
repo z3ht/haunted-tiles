@@ -1,3 +1,5 @@
+import time
+
 from gym import spaces
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
@@ -73,6 +75,15 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         # Call this only after game is up to date
         self.agents_obs = self._retrieve_agents_obs()
 
+        print("Initial Board: ")
+        for row in self.game.board.board:
+            print(row)
+        print("--------------")
+        print("Initial Agent obs: ")
+        print(self.agents_obs)
+        print("--------------")
+        time.sleep(4)
+
         return self.agents_obs
 
     def step(self, actions_dict):
@@ -145,6 +156,21 @@ class HauntedTilesEnvironment(MultiAgentEnv):
             if episode_over:
                 rewards_dict[agent_name] += agent.game_end_reward(self.game)
             done_dict[agent_name] = episode_over
+
+        print("Board: ")
+        for row in self.game.board.board:
+            print(row)
+        print("--------------")
+        print("Agent obs: ")
+        print(self.agents_obs)
+        print("--------------")
+        print("Rewards dict: ")
+        print(rewards_dict)
+        print("--------------")
+        print("Done dict: ")
+        print(done_dict)
+        print("--------------")
+        time.sleep(4)
 
         return self.agents_obs, rewards_dict, done_dict, info_n
 

@@ -35,15 +35,16 @@ def train(save_dir, agents, board, total_timesteps=4000):
         "original_board": copy.deepcopy(board),
         "action_space": Discrete(5)
     }
-    # config["log_level"] = 'DEBUG'
+    config["num_gpus"] = 1
 
     trainer = ppo.PPOTrainer(config=config, env=HauntedTilesEnvironment)
     for i in range(total_timesteps):
         result = trainer.train()
-        print(pretty_print(result))
+        if i % 100 == 0:
+            print(pretty_print(result))
 
-    # save = trainer.save(save_dir)
-    # print("model saved at: ", save)
+    save = trainer.save(save_dir)
+    print("model saved at: ", save)
 
     # calc_win_rate(model)
 
@@ -61,6 +62,6 @@ def basic():
 
 
 if __name__ == "__main__":
-    ray.init()
+    ray.init(num_gpus=1)
     basic()
 
