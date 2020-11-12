@@ -64,7 +64,7 @@ class ReinforcementAgent(Agent):
         return self.ACTIONS[raw_action]
 
     @staticmethod
-    def _calc_location(cur_location, action):
+    def calc_location(cur_location, action):
         return tuple([cur_location[i] + action[i] for i in range(cur_location)])
 
 
@@ -102,7 +102,7 @@ class ProceduralAgent(Agent):
     def __init__(self, side, controlled_player_inds):
         super().__init__(side, controlled_player_inds)
 
-    def calc_action(self, game_state):
+    def calc_move(self, game_state):
         pass
 
 
@@ -116,7 +116,7 @@ class StrategyAgent(ProceduralAgent):
 
         self.strategy = strategy
 
-    def calc_action(self, game_state):
+    def calc_move(self, game_state):
         self.strategy.update(game_state=game_state)
 
         moves = self.strategy.move()
