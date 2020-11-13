@@ -15,6 +15,7 @@ load_dotenv(verbose=True)
 app = Flask(__name__)
 CORS(app)
 game_cache = ExpiringDict(max_len=1000, max_age_seconds=60*60)
+loaded_strategies = ExpiringDict(max_len=1000, max_age_seconds=60*60)
 
 
 @app.before_request
@@ -84,6 +85,11 @@ def move():
 @return_json
 def test():
     return hello_world()
+
+
+@app.route('/load', methods=["POST"])
+def load():
+    loaded_strategies["alpha"] = strategies.RLModel()
 
 
 if __name__ == "__main__":
