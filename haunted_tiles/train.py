@@ -70,6 +70,29 @@ def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), tot
     print("model saved at: ", save)
 
 
+def load_train(model_dir, model_class, total_timesteps, checkpoint="/checkpoint_1/checkpoint-1"):
+    infile = open(model_dir + "/config.pkl", 'rb')
+    config = pickle.load(infile)
+    infile.close()
+
+    config["timesteps_per_iteration"] = total_timesteps
+
+    config_save_file = open(model_dir + "/config.pkl", "wb")
+    pickle.dump(config, config_save_file)
+    config_save_file.close()
+
+    print("Config pickle saved at " + model_dir + "/config.pkl")
+
+    model = model_class(config)
+    model.restore(model_dir + checkpoint)
+
+    result = model.train()
+    print(pretty_print(result))
+
+    save = model.save(model_dir)
+    print("model saved at: ", save)
+
+
 def basic():
     rl_agents = {
         "chad": MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
@@ -80,14 +103,14 @@ def basic():
     board = Board(board_type=BoardType.DEFAULT)
 
     train_ppo(
-        save_dir="./models/alpha",
+        save_dir="./models/beta",
         rl_agents=rl_agents,
         proc_agents=tuple([
             StrategyAgent(side="away", strategy=RandomAvoidDeath)
         ]),
         action_space=Discrete(5),
         board=board,
-        total_timesteps=5000000
+        total_timesteps=20000000
     )
 
 
@@ -99,5 +122,5 @@ def load():
 
 if __name__ == "__main__":
     ray.init(num_gpus=1)
-    basic()
+    load_train(model_dir="./models/alpha", model_class=ppo.PPOTrainer, total_timesteps=20000000)
     load()
