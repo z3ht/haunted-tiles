@@ -2,7 +2,6 @@ from enum import Enum
 import random
 import numpy as np
 from haunted_tiles.dijkstras import dijkstras
-import copy
 import pickle
 
 from haunted_tiles.environment.mock import mock_obs, mock_format_actions
@@ -65,20 +64,11 @@ class Random(Strategy):
         self.game_state = game_state
 
     def move(self):
-        actions = []
-        is_done = False
-        for one in self.actions:
-            for two in self.actions:
-                for three in self.actions:
-                    actions = [one, two, three]
-                    if self._is_valid_moves(actions):
-                        is_done = True
-                        break
-                if is_done:
-                    break
-            if is_done:
+        while True:
+            rand_actions = random.choices(self.actions, k=3)
+            if self._is_valid_moves(rand_actions):
                 break
-        return actions
+        return rand_actions
 
     def _is_valid_moves(self, moves):
         locations = self.game_state[self.side]
@@ -86,8 +76,8 @@ class Random(Strategy):
             return False
         board = self.game_state['tileStatus']
         for move, location in zip(moves, locations):
-            x = location[0]
-            y = location[1]
+            y = location[0]
+            x = location[1]
             if move == 'north' and (y + 1) >= len(board):
                 return False
             elif move == 'south' and (y - 1) < 0:
@@ -146,6 +136,53 @@ class RandomAvoidDeath(Random):
             itr += 1
         return actions
 
+class Hourglass(Strategy):
+    START_SEQUENCE = {'away': [['east', 'north', 'east', 'north', 'east', 'south'],
+                               ['north', 'north', 'west', 'north', 'north', 'north'],
+                               ['west', 'north', 'west', 'north', 'none', 'north']],
+                      'home': [['east', 'south', 'east', 'south', 'east', 'north'],
+                               ['south', 'south', 'west', 'south', 'south', 'south'],
+                               ['west', 'south', 'west', 'south', 'none', 'south']]}
+
+    SURVIVOR_PATH = {'away': ['east', 'east', 'south', 'west', 'west', 'west', 'north', 'west', 'south', 'west'],
+                     'home': ['west', 'west', 'north', 'east', 'east', 'east', 'south', 'east', 'north', 'east']}
+
+    def __init__(self, side):
+        self.side = side
+        self.finished_start_sequence = False
+        self.start_sequence_initialized = False
+        self.start_sequence_iter = None
+        self.rad = RandomAvoidDeath(side)
+
+    def update(self, game_state):
+        self.rad.update(game_state)
+        self.game_state = game_state
+        if not self.start_sequence_initialized:
+            self.start_sequence_iter = zip(self.START_SEQUENCE[self.side][0], self.START_SEQUENCE[self.side][1], self.START_SEQUENCE[self.side][2])
+            self.start_sequence_initialized = True
+            self.survivor_path_iter = None
+
+    def move(self):
+        if not self.finished_start_sequence:
+            try:
+                player1, player2, player3 = next(self.start_sequence_iter)
+                return [player1, player2, player3]
+            except:
+                self.finished_start_sequence = True
+                self.survivor_path_iter = iter(self.SURVIVOR_PATH[self.side])
+
+        move = self.rad.move()
+        return [self.get_survivor_move(), move[1], move[2]]
+
+    def get_survivor_move(self):
+        surv_x, surv_y = self.game_state[self.side][0][:2]
+        survivor_move = 'none'
+        if self.game_state['tileStates'][surv_y][surv_x] <= 1:
+            try:
+                survivor_move = next(self.survivor_path_iter)
+            except:
+                pass
+        return survivor_move
 
 class RLModel(Strategy):
 
