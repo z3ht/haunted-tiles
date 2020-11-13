@@ -12,7 +12,7 @@ function main(gameState, side){
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
-    const args = "&Strategy=" + strategy + "&Side=" + json_side
+    const args = "&Strategy=" + strategy + "&Side=" + json_side + "&Game-State=" + json_gameState
     request.open('POST', baseUrl + "/?" + token + args, false);
     request.send(null);
     gameId = request.responseText;

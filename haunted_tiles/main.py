@@ -44,13 +44,12 @@ def create_game():
     game_state = format_game_state(request.args['Game-State'])
     board = game_state['tileStates']
 
-    if board == BoardType.HOURGLASS:
+    if board == BoardType.HOURGLASS.value:
         strategy = 'hourglass'
-    #
-# / ' &
+
     if strategy not in available_strategies:
         abort(400)
-# reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
     if side not in ['home', 'away']:
         abort(400)
 
@@ -63,17 +62,20 @@ def create_game():
 
 @app.route('/update', methods=["POST"])
 def update():
-    for item in ["Game-Id", "Game-State"]:
-        if item not in request.args:
+    try:
+        for item in ["Game-Id", "Game-State"]:
+            if item not in request.args:
+                abort(400)
+
+        game_id = format_string(request.args["Game-Id"])
+        game_state = format_game_state(request.args["Game-State"].lower())
+
+        if game_id not in game_cache:
             abort(400)
 
-    game_id = format_string(request.args["Game-Id"])
-    game_state = format_game_state(request.args["Game-State"].lower())
-
-    if game_id not in game_cache:
-        abort(400)
-
-    game_cache[game_id].update(game_state=game_state)
+        game_cache[game_id].update(game_state=game_state)
+    except:
+        print("NOPE NOT TODAY")
 
 
 @app.route('/move', methods=["GET"])
