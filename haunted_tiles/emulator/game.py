@@ -132,12 +132,12 @@ class Game:
         :return: same format as described in preprocessing.format_game_state
         """
         if not self.return_dead:
-            return {'tileStatus': self.board,
+            return {'tileStatus': self.board.board,
                     'home': [plyr.get_location() for plyr in self.home_players if not plyr.is_dead],
                     'away': [plyr.get_location() for plyr in self.away_players if not plyr.is_dead],
                     'boardSize': self.board.board_size}
         else:
-            return {'tileStatus': self.board,
+            return {'tileStatus': self.board.board,
                     'home': [[*plyr.get_location(), plyr.is_dead] for plyr in self.home_players],
                     'away': [[*plyr.get_location(), plyr.is_dead] for plyr in self.away_players],
                     'boardSize': self.board.board_size}

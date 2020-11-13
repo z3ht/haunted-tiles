@@ -1,12 +1,10 @@
-import time
-
 from gym import spaces
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
 from haunted_tiles.emulator.game import Game, Winner
-from haunted_tiles.agent.base import ReinforcementAgent
 from haunted_tiles.strategies import Still
+from haunted_tiles.environment.mock import mock_obs, mock_format_actions
 
 
 class HauntedTilesEnvironment(MultiAgentEnv):
@@ -21,7 +19,8 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         ======
         :param env_config : Environment configuration
                 Parameters:
-                    agents : List of agents that will be controlling monsters (supports reinforcement and procedural)
+                    rl_agents : List of reinforcement agents that will be controlling monsters
+                    proc_agents : List of procedural agents that will be controlling monsters
                     board : The board that the game should begin with
                     original_board : (optional) copy of the board to pass in
                     observation_space : (optional)
@@ -31,21 +30,18 @@ class HauntedTilesEnvironment(MultiAgentEnv):
                     action_space :
                             Shape of the number of actions an agent can take. This must be uniform for all agents
         """
-        agents = env_config["agents"]
+        rl_agents = env_config["rl_agents"]
+        proc_agents = env_config["proc_agents"]
         board = env_config["board"]
         original_board = env_config["original_board"]
         action_space = env_config["action_space"]
 
         # Save reinforcement learning agents used in the environment
-        self.agents = {}
-        for agent in agents:
-            if not isinstance(agent, ReinforcementAgent):
-                continue
-            self.agents[agent.name] = agent
+        self.agents = rl_agents
         self.num_agents = len(self.agents)
 
         # Save other agents used in the environment
-        self.other_agents = [agent for agent in agents if not isinstance(agent, ReinforcementAgent)]
+        self.other_agents = proc_agents
 
         # Save board and original_board
         self.board = board
@@ -117,18 +113,20 @@ class HauntedTilesEnvironment(MultiAgentEnv):
                         However, official evaluations of your agent are not allowed to use this for learning.
         """
         rewards_dict = {}
-        for agent in self.agents.values():
-            rewards_dict[agent.name] = 0
+        for name, agent in self.agents.items():
+            rewards_dict[name] = 0
 
         # Its best to create a wrapper and add to info rather than modifying info here directly
         # More info on wrappers:
         # https://github.com/araffin/rl-tutorial-jnrr19/blob/sb3/2_gym_wrappers_saving_loading.ipynb
         info_n = {}
 
+        formatted_actions = mock_format_actions(self.agents, actions_dict)
+
         for agent_name, action in actions_dict.items():
             agent = self.agents[agent_name]
 
-            formatted_action = agent.format_action(action)
+            formatted_action = formatted_actions[agent_name]
 
             rewards_dict[agent_name] = agent.calc_reward(self.game, formatted_action)
 
@@ -180,7 +178,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
     def render(self):
         print(self.game.get_game_state())
 
-    def _retrieve_agents_obs(self, agents=None):
+    def _retrieve_agents_obs(self, agents=None, game_state=None):
         """
         For each agent in agents, retrieve an interpretable numpy array of the game state
 
@@ -196,8 +194,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         if agents is None:
             agents = self.agents
 
-        agents_obs = {}
-        for name, agent in agents.items():
-            agents_obs[agent.name] = agent.interpret_game_state(self.game.get_game_state())
+        if game_state is None:
+            game_state = self.game.get_game_state()
 
-        return agents_obs
+        return mock_obs(agents, game_state)
