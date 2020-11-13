@@ -143,7 +143,6 @@ class RandomAvoidDeath(Random):
                     break
             if is_done:
                 break
-            itr += 1
         return actions
 
 
