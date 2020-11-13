@@ -5,6 +5,7 @@ from flask import Flask, request, abort
 import uuid
 from flask_cors import CORS
 
+from haunted_tiles.emulator.board import BoardType
 from haunted_tiles.examples import hello_world
 from haunted_tiles.utils import return_json
 from haunted_tiles import strategies
@@ -33,15 +34,23 @@ def create_game():
             abort(400)
 
     available_strategies = {
-        "basic": strategies.Basic
+        "basic": strategies.Basic,
+        'hourglass': strategies.Hourglass,
+        'hail-mary': strategies.RandomAvoidDeath
     }
 
     side = format_string(request.args["Side"])
-    strategy = request.args["Strategy"].lower()
+    strategy = format_string(request.args["Strategy"]).lower()
+    game_state = format_game_state(request.args['Game-State'])
+    board = game_state['tileStates']
 
+    if board == BoardType.HOURGLASS:
+        strategy = 'hourglass'
+    #
+# / ' &
     if strategy not in available_strategies:
         abort(400)
-
+# reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     if side not in ['home', 'away']:
         abort(400)
 
