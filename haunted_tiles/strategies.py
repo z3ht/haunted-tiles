@@ -93,12 +93,33 @@ class RandomAvoidDeath(Random):
     def __init__(self, side):
         super().__init__(side)
 
+    def _is_good_moves(self, moves):
+        locations = self.game_state[self.side]
+        if len(moves) != 3:
+            return False
+        board = self.game_state['tileStatus'].board
+        for move, location in zip(moves, locations):
+            y = location[0]
+            x = location[1]
+            alive = not location[2]
+            if alive and move == 'north' and board[y+1][x] <= 1:
+                return False
+            elif alive and move == 'south' and board[y-1][x] <= 1:
+                return False
+            elif alive and move == 'east' and board[y][x+1] <= 1:
+                return False
+            elif alive and move == 'west' and board[y][x-1] <= 1:
+                return False
+            elif alive and move == 'none' and board[y][x] <= 1:
+                return False
+        return True
+
     def move(self):
         max_itr = 100
         itr = 0
         while True:
             actions = super().move()
-            if self._is_valid_moves(actions) or itr > max_itr:
+            if self._is_good_moves(actions) or itr > max_itr:
                 break
             itr += 1
         return actions
