@@ -110,7 +110,7 @@ def basic():
         ]),
         action_space=Discrete(5),
         board=board,
-        total_timesteps=20000000
+        total_timesteps=10000000
     )
 
 
@@ -122,5 +122,6 @@ def load():
 
 if __name__ == "__main__":
     ray.init(num_gpus=1)
-    load_train(model_dir="./models/alpha", model_class=ppo.PPOTrainer, total_timesteps=20000000)
+    basic()
+    # load_train(model_dir="./models/alpha", model_class=ppo.PPOTrainer, total_timesteps=20000000)
     load()

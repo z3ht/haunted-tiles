@@ -37,7 +37,6 @@ class ReinforcementAgent(Agent):
                 friend_positions.append((player[0], player[1]))
 
         foe_side = "away" if self.side == "home" else "home"
-        friend_positions = [(player[0], player[1]) for player in game_state[self.side] if not player[2]]
         foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
 
         obs = []
@@ -71,12 +70,7 @@ class ReinforcementAgent(Agent):
         return reward
 
     def game_end_reward(self, game):
-        if game.get_winner().value == self.side:
-            return 5
-        elif game.get_winner().value == "tie":
-            return 0
-        else:
-            return -5
+        return 0
 
     def format_action(self, raw_action):
         pass

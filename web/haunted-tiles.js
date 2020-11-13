@@ -6,7 +6,7 @@ const request = new XMLHttpRequest();
 const baseUrl = "https://haunted-tiles.xyz"
 const apiToken = "ep1c-t0ken";
 const strategy = "basic";
-let gameId = undefined
+let gameId = undefined;
 
 function main(gameState, side){
   const json_gameState = JSON.stringify(gameState).toString();
@@ -15,13 +15,16 @@ function main(gameState, side){
   const token = "Api-Token=" + apiToken;
 
   if (gameId === undefined) {
-    const args = "&Strategy=" + strategy + "&Side=" + json_side
+    const json_strategy = JSON.stringify(strategy);
+    const args = "&Strategy=" + json_strategy + "&Side=" + json_side + "&Game-State=" + json_gameState
     request.open('POST', baseUrl + "/?" + token + args, false);
     request.send(null);
     gameId = request.responseText;
   }
 
-  const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState
+  console.log(gameId);
+
+  const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState;
   request.open('POST', baseUrl + "/update?" + token + args, false);
   request.send(null);
 
@@ -42,13 +45,13 @@ function test() {
 console.log(main({
   boardSize: [7, 7],
   tileStates: [
-    [1, 3, 3, 1, 3, 3, 1],
     [3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3],
-    [1, 3, 3, 3, 2, 2, 2],
-    [3, 3, 3, 3, 2, 3, 3]
+    [3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 2, 3, 2],
+    [3, 3, 3, 3, 3, 3, 3]
   ],
   teamStates: {
     away: [
