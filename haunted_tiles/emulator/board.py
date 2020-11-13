@@ -2,13 +2,7 @@ from enum import Enum
 
 
 class BoardType(Enum):
-    DEFAULT = [[3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3],
-               [3, 3, 3, 3, 3, 3, 3]]#[[3 for _ in range(7)] for j in range(7)],
+    DEFAULT = [[3 for _ in range(7)] for j in range(7)],
     WAFFLE_TOWN = [
         [3, 3, 0, 3, 0, 3, 3],
         [3, 3, 3, 3, 3, 3, 3],
@@ -50,7 +44,7 @@ class BoardType(Enum):
 class Board:
     def __init__(self, board_type):
 
-        self.board = board_type.value
+        self.board = board_type.value[0]
         self.home_start_locations = [(0, 0), (3, 0), (6, 0)]
         self.away_start_locations = [(0, 6), (3, 6), (6, 6)]
         self.board_size = (7, 7)

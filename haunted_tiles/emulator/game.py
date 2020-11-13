@@ -44,8 +44,6 @@ class Game:
                 for row in self.board.board:
                     print(row)
 
-
-
         return self.get_winner()
 
     def move_players(self):
@@ -53,8 +51,8 @@ class Game:
         Get moves of players and move players
         """
         game_state = self.get_game_state()
-        self.home_strategy.update(game_state)
-        self.away_strategy.update(game_state)
+        self.home_strategy.update(game_state=game_state)
+        self.away_strategy.update(game_state=self.get_game_state())
         home_1_move, home_2_move, home_3_move = self.home_strategy.move()
         away_1_move, away_2_move, away_3_move = self.away_strategy.move()
         self.home_players[0].move(home_1_move)

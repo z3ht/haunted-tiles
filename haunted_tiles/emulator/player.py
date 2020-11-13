@@ -5,7 +5,7 @@ class Player:
         self.is_dead = False
         self.y = y
         self.x = x
-        self._direction_to_move = {'south': (0, 1), 'north': (0, -1), 'east': (1, 0), 'west': (-1, 0), 'none': (0, 0)}
+        self._direction_to_move = {'south': (0, -1), 'north': (0, 1), 'east': (1, 0), 'west': (-1, 0), 'none': (0, 0)}
 
     def get_location(self):
         return self.x, self.y
