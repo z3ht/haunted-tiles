@@ -49,7 +49,21 @@ class ReinforcementAgent(Agent):
         return obs
 
     def calc_reward(self, game, action):
-        return 0
+        state = game.get_game_state()
+        reward = 0
+        if state[self.side][self.controlled_player_inds][2]:
+            reward += 3
+        else:
+            reward -= 3
+        foe = 'home' if self.side == 'away' else 'away'
+
+        num_enemies_alive = 0
+        for enemies in state[foe]:
+            for enemy in enemies:
+                if enemy[2]:
+                    num_enemies_alive += 1
+
+        return reward - max(num_enemies_alive, 2)
 
     def game_end_reward(self, game):
         if game.get_winner().value == self.side:
