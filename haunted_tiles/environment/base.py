@@ -1,6 +1,7 @@
 from gym import spaces
 
 import time
+import copy
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
@@ -55,10 +56,8 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         if "observation_space" in env_config:
             self.observation_space = env_config["observation_space"]
         else:
-            # By default, observe the whole board 0-3 are empty tiles with their damage amount,
-            #                                     4 for friendlies, 5 for enemies
             board_size = self.board.board_size
-            self.observation_space = spaces.Box(low=0, high=6, shape=(board_size[0], board_size[1]))
+            self.observation_space = spaces.Box(low=0, high=4, shape=(board_size[0], board_size[1] * 2))
 
         # Create game
         self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
@@ -67,7 +66,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         self.agents_obs = self._retrieve_agents_obs()
 
     def reset(self):
-        self.board = self.original_board
+        self.board = copy.deepcopy(self.original_board)
         self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date
@@ -139,6 +138,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         for i, agent in enumerate(self.other_agents):
             formatted_action = agent.calc_moves(self.game.get_game_state())
             for player_ind, move in formatted_action.items():
+                # print(f"(PROC)  Side: {agent.side}     Player ind: {player_ind}        Move: {move}")
                 self.game.move_player(side=agent.side, player_index=player_ind, direction=move)
 
         self.game.update_board()

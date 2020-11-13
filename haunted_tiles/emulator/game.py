@@ -38,11 +38,11 @@ class Game:
             self.update_board()
             self.update_dead()
 
-        if verbose:
-            print('home:', [player.get_location() for player in self.home_players])
-            print('away:', [player.get_location() for player in self.away_players])
-            for row in self.board.board:
-                print(row)
+            if verbose:
+                print('home:', [player.get_location() for player in self.home_players])
+                print('away:', [player.get_location() for player in self.away_players])
+                for row in self.board.board:
+                    print(row)
 
         return self.get_winner()
 
@@ -139,12 +139,49 @@ class Game:
         :return: same format as described in preprocessing.format_game_state
         """
         if not self.return_dead:
-            return {'tileStates': self.board.board,
+            return {'tileStatus': self.board.board,
                     'home': [plyr.get_location() for plyr in self.home_players if not plyr.is_dead],
                     'away': [plyr.get_location() for plyr in self.away_players if not plyr.is_dead],
                     'boardSize': self.board.board_size}
         else:
-            return {'tileStates': self.board.board,
+            return {'tileStatus': self.board.board,
                     'home': [[*plyr.get_location(), plyr.is_dead] for plyr in self.home_players],
                     'away': [[*plyr.get_location(), plyr.is_dead] for plyr in self.away_players],
                     'boardSize': self.board.board_size}
+
+    def display_board(self):
+        game_state = self.get_game_state()
+        board = game_state["tileStatus"]
+
+        # team positions for living players
+        home_positions = []
+        for player in game_state["home"]:
+            if player[2]:
+                home_positions.append(None)
+            else:
+                home_positions.append((player[0], player[1]))
+
+        away_positions = [(player[0], player[1]) for player in game_state["away"] if not player[2]]
+
+        obs = []
+        for y in range(len(board)):
+            health_row = []
+            location_row = []
+            for x in range(len(board[y])):
+                health_data = board[y][x]
+                location_data = 0
+
+                if (x, y) == home_positions[0]:
+                    location_data = 1
+                elif (x, y) in home_positions:
+                    location_data = 2
+                elif (x, y) in away_positions:
+                    location_data = 3
+
+                health_row.append(health_data)
+                location_row.append(location_data)
+
+            obs.append(health_row + location_row)
+        for row in obs:
+            print(row)
+        print("-------")

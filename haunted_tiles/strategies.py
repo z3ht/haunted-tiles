@@ -2,6 +2,7 @@ from enum import Enum
 import random
 import numpy as np
 from haunted_tiles.dijkstras import dijkstras
+import copy
 import pickle
 
 from haunted_tiles.environment.mock import mock_obs, mock_format_actions
@@ -64,11 +65,20 @@ class Random(Strategy):
         self.game_state = game_state
 
     def move(self):
-        while True:
-            rand_actions = random.choices(self.actions, k=3)
-            if self._is_valid_moves(rand_actions):
+        actions = []
+        is_done = False
+        for one in self.actions:
+            for two in self.actions:
+                for three in self.actions:
+                    actions = [one, two, three]
+                    if self._is_valid_moves(actions):
+                        is_done = True
+                        break
+                if is_done:
+                    break
+            if is_done:
                 break
-        return rand_actions
+        return actions
 
     def _is_valid_moves(self, moves):
         locations = self.game_state[self.side]
@@ -76,8 +86,8 @@ class Random(Strategy):
             return False
         board = self.game_state['tileStatus']
         for move, location in zip(moves, locations):
-            y = location[0]
-            x = location[1]
+            x = location[0]
+            y = location[1]
             if move == 'north' and (y + 1) >= len(board):
                 return False
             elif move == 'south' and (y - 1) < 0:
@@ -97,29 +107,41 @@ class RandomAvoidDeath(Random):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = self.game_state['tileStatus']
+        board = copy.deepcopy(self.game_state['tileStatus'])
         for move, location in zip(moves, locations):
-            y = location[0]
-            x = location[1]
+            x = location[0]
+            y = location[1]
             alive = not location[2]
             if alive and move == 'north' and board[y+1][x] <= 1:
+                board[y+1][x] -= 1
                 return False
             elif alive and move == 'south' and board[y-1][x] <= 1:
+                board[y - 1][x] -= 1
                 return False
             elif alive and move == 'east' and board[y][x+1] <= 1:
+                board[y][x + 1] -= 1
                 return False
             elif alive and move == 'west' and board[y][x-1] <= 1:
+                board[y][x - 1] -= 1
                 return False
             elif alive and move == 'none' and board[y][x] <= 1:
+                board[y][x] -= 1
                 return False
         return True
 
     def move(self):
-        max_itr = 100
-        itr = 0
-        while True:
-            actions = super().move()
-            if self._is_good_moves(actions) or itr > max_itr:
+        actions = []
+        is_done = False
+        for one in random.sample(self.actions, k=len(self.actions)):
+            for two in random.sample(self.actions, k=len(self.actions)):
+                for three in random.sample(self.actions, k=len(self.actions)):
+                    actions = [one, two, three]
+                    if self._is_valid_moves(actions) and self._is_good_moves(actions):
+                        is_done = True
+                        break
+                if is_done:
+                    break
+            if is_done:
                 break
             itr += 1
         return actions
@@ -155,6 +177,7 @@ class RLModel(Strategy):
 
     def update(self, game_state):
         self.game_state = game_state
+
         self.obs = mock_obs(self.rl_agents, game_state)
 
     def move(self):
@@ -176,55 +199,28 @@ class Wanderer(Strategy):
         super().__init__(side)
         self.actions = ['north', 'south', 'east', 'west', 'none']
         self.survivor_index = survivor_index
-        self.wandering_path = None
-        self.wandering_path_found = False
 
     def update(self, game_state):
         self.game_state = game_state
         board = game_state['tileStates']
         survivor_position = game_state[self.side][self.survivor_index][:2]
 
-        # find the best path to traverse an UNCONTESTED area
-        if not self.wandering_path_found:
-            self.wandering_path = reversed(self.find_longest_overall(survivor_position))
-
-    def move(self):
-        if not self.wandering_path_found:
-            print('update must be called before move')
-            return ['none', 'none', 'none']
-
-        next_x, next_y = next(self.wandering_path)
-        surv_x, surv_y = self.game_state[self.side][self.survivor_index][:2]
-        dif_x, dif_y = surv_x - next_x, surv_y - next_y
-
-        move_dir = None
-        if dif_x == 1:
-            move_dir = 'east'
-        elif dif_x == -1:
-            move_dir = 'west'
-        elif dif_y == 1:
-            move_dir = 'south'
-        else:
-            move_dir = 'north'
-
-        player_moves = ['none', 'none', 'none']
-        player_moves[self.survivor_index] = move_dir
-        return player_moves
-
-    # find longest path from every point to player determine longest possible path
-    def find_longest_overall(self, survivor_position):
         longest_path = []
-        for y in range(7):
-            for x in range(7):
-                if self._is_valid_move((x, y)) and [x, y] != survivor_position:
-                    new_path = self.find_longest_from_point((x, y))
+        # find the point that has the largest path to the player
+        for y in range(len(self.game_state['tileStates'][:])):
+            for x in range(len(self.game_state['tileStates'][0])):
+                if self._is_valid_move((x, y)):
+                    new_path = self.find_longest_path((x, y))
                     end_x, end_y = new_path[-1]
-                    if len(new_path) > len(longest_path) and abs(survivor_position[0] - end_x) + abs(survivor_position[1] - end_y) == 1:
-                        longest_path = new_path
+                if len(new_path) > len(longest_path) and abs(survivor_position[0] - end_x) + abs(survivor_position[1] - end_y) == 1:
+                    longest_path = new_path
         return longest_path
 
+    def move(self):
+        return ['none', 'none', 'none']
+
     # find the longest path from a point to the player
-    def find_longest_from_point(self, end_point):
+    def find_longest_path(self, end_point):
         def find_longest_path(end_point, visited, path):
             visited.add(end_point)
             if end_point[0] == self.game_state[self.side][self.survivor_index][0] and\
@@ -246,6 +242,7 @@ class Wanderer(Strategy):
         return find_longest_path(end_point, visited, [])
 
     def _is_valid_move(self, move):
+
         x, y = move
         if 0 > x or x >= len(self.game_state['tileStates'][0]):
             return False
@@ -256,3 +253,21 @@ class Wanderer(Strategy):
         return True
 
 
+# wndr = Wanderer(side=Side.HOME)
+# state = {'tileStates': [[3 for i in range(7)] for j in range(7)],
+#                    'home': [[0, 0, True]]}
+#
+# state['tileStates'][0][5] = 0
+# state['tileStates'][1][5] = 0
+# state['tileStates'][2][5] = 0
+# state['tileStates'][3][5] = 0
+# state['tileStates'][4][5] = 0
+# state['tileStates'][5][5] = 0
+# state['tileStates'][6][5] = 0
+#
+# wndr.game_state = state
+#
+# print(wndr.find_longest_path((6, 6)))
+#
+# # print(wndr.update(state))
+# #

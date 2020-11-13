@@ -12,19 +12,25 @@ from haunted_tiles.agent.base import MonsterReinforcementAgent, StrategyAgent
 from haunted_tiles.environment.base import HauntedTilesEnvironment
 from haunted_tiles.emulator.board import Board, BoardType
 from haunted_tiles.emulator.game import Game, Winner
-from haunted_tiles.strategies import RLModel, RandomAvoidDeath
+from haunted_tiles.strategies import RLModel, RandomAvoidDeath, Still
 
 
-def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_trials=1000):
-    wins = [0, 0]
+def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_trials=100):
+    wins = [0, 0, 0]
+    original_board = Board(board_type=board_type)
     for _ in range(n_trials):
-        board = Board(board_type=board_type)
+        board = copy.deepcopy(original_board)
         game = Game(board, home_strategy, away_strategy, True)
-        winner = game.play_game()
+
+        winner = game.play_game(verbose=True)
+        print(winner)
+
         if winner == Winner.HOME:
             wins[0] += 1
-        else:
+        elif winner == Winner.AWAY:
             wins[1] += 1
+        elif winner == winner.TIE:
+            wins[2] += 1
     win_prob = [w / n_trials for w in wins]
     print(win_prob)
 
@@ -38,8 +44,8 @@ def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), tot
         "original_board": copy.deepcopy(board),
         "action_space": action_space
     }
-    config["num_gpus"] = 1
     config["timesteps_per_iteration"] = total_timesteps
+    config["num_workers"] = 24
     config["env"] = HauntedTilesEnvironment
 
     if os.path.isdir(save_dir):
@@ -68,7 +74,7 @@ def basic():
     rl_agents = {
         "chad": MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
         "brad": MonsterReinforcementAgent(name="brad", side="home", controlled_player_ind=1),
-        "gamer": MonsterReinforcementAgent(name="gamer", side="home", controlled_player_ind=2)
+        "rad": MonsterReinforcementAgent(name="rad", side="home", controlled_player_ind=2),
     }
 
     board = Board(board_type=BoardType.DEFAULT)
@@ -76,27 +82,17 @@ def basic():
     train_ppo(
         save_dir="./models/alpha",
         rl_agents=rl_agents,
-        proc_agents=tuple([StrategyAgent(side="away", strategy=RandomAvoidDeath)]),
+        proc_agents=tuple([
+            StrategyAgent(side="away", strategy=RandomAvoidDeath)
+        ]),
         action_space=Discrete(5),
         board=board,
-        total_timesteps=100000
+        total_timesteps=5000000
     )
 
 
 def load():
-
     l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/")
-
-    l.update(
-        {
-            'tileStatus': BoardType.DEFAULT.value[0],
-            'home': [(0, 0, False), (3, 0, False), (6, 0, False)],
-            'away': [(0, 6, False), (3, 6, False), (6, 6, False)],
-            'boardSize': (7, 7)
-        }
-    )
-
-    l.move()
 
     calc_win_rate(l, RandomAvoidDeath(side="away"))
 
