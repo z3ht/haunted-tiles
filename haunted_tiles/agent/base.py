@@ -37,6 +37,7 @@ class ReinforcementAgent(Agent):
                 friend_positions.append((player[0], player[1]))
 
         foe_side = "away" if self.side == "home" else "home"
+        friend_positions = [(player[0], player[1]) for player in game_state[self.side] if not player[2]]
         foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
 
         obs = []

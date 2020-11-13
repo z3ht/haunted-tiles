@@ -144,6 +144,55 @@ class RandomAvoidDeath(Random):
         return actions
 
 
+class Hourglass(Strategy):
+    START_SEQUENCE = {'away': [['east', 'north', 'east', 'north', 'east', 'south'],
+                               ['north', 'north', 'west', 'north', 'north', 'north'],
+                               ['west', 'north', 'west', 'north', 'none', 'north']],
+                      'home': [['east', 'south', 'east', 'south', 'east', 'north'],
+                               ['south', 'south', 'west', 'south', 'south', 'south'],
+                               ['west', 'south', 'west', 'south', 'none', 'south']]}
+
+    SURVIVOR_PATH = {'away': ['east', 'east', 'south', 'west', 'west', 'west', 'north', 'west', 'south', 'west'],
+                     'home': ['west', 'west', 'north', 'east', 'east', 'east', 'south', 'east', 'north', 'east']}
+
+    def __init__(self, side):
+        self.side = side
+        self.finished_start_sequence = False
+        self.start_sequence_initialized = False
+        self.start_sequence_iter = None
+        self.rad = RandomAvoidDeath(side)
+
+    def update(self, game_state):
+        self.rad.update(game_state)
+        self.game_state = game_state
+        if not self.start_sequence_initialized:
+            self.start_sequence_iter = zip(self.START_SEQUENCE[self.side][0], self.START_SEQUENCE[self.side][1], self.START_SEQUENCE[self.side][2])
+            self.start_sequence_initialized = True
+            self.survivor_path_iter = None
+
+    def move(self):
+        if not self.finished_start_sequence:
+            try:
+                player1, player2, player3 = next(self.start_sequence_iter)
+                return [player1, player2, player3]
+            except:
+                self.finished_start_sequence = True
+                self.survivor_path_iter = iter(self.SURVIVOR_PATH[self.side])
+
+        move = self.rad.move()
+        return [self.get_survivor_move(), move[1], move[2]]
+
+    def get_survivor_move(self):
+        surv_x, surv_y = self.game_state[self.side][0][:2]
+        survivor_move = 'none'
+        if self.game_state['tileStates'][surv_y][surv_x] <= 1:
+            try:
+                survivor_move = next(self.survivor_path_iter)
+            except:
+                pass
+        return survivor_move
+
+
 class RLModel(Strategy):
 
     # Jank but might work.... we're running out of time here

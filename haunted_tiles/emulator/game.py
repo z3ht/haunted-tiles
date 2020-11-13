@@ -37,8 +37,12 @@ class Game:
             self.move_players()
             self.update_board()
             self.update_dead()
+
             if verbose:
-                self.display_board()
+                print('home:', [player.get_location() for player in self.home_players])
+                print('away:', [player.get_location() for player in self.away_players])
+                for row in self.board.board:
+                    print(row)
 
         return self.get_winner()
 

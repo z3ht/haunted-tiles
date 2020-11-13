@@ -1,7 +1,7 @@
 from gym.spaces import Discrete
 
 import ray
-from ray.rllib.agents import ppo, dqn, marwil
+from ray.rllib.agents import ppo
 from ray.tune.logger import pretty_print
 
 import copy
