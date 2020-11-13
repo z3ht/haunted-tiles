@@ -72,7 +72,7 @@ class Random(Strategy):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = self.game_state['tileStatus'].board
+        board = self.game_state['tileStatus']
         for move, location in zip(moves, locations):
             y = location[0]
             x = location[1]
@@ -146,4 +146,4 @@ class RLModel(Strategy):
             for player_ind in action:
                 moves[player_ind] = self.ACTIONS[action[player_ind]]
 
-        return actions
+        return moves

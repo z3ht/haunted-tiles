@@ -8,11 +8,11 @@ import copy
 import pickle
 import os
 
-from haunted_tiles.agent.base import MonsterReinforcementAgent
+from haunted_tiles.agent.base import MonsterReinforcementAgent, StrategyAgent
 from haunted_tiles.environment.base import HauntedTilesEnvironment
 from haunted_tiles.emulator.board import Board, BoardType
 from haunted_tiles.emulator.game import Game, Winner
-from haunted_tiles.strategies import RLModel
+from haunted_tiles.strategies import RLModel, RandomAvoidDeath
 
 
 def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_trials=1000):
@@ -29,11 +29,11 @@ def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_
     print(win_prob)
 
 
-def train_ppo(save_dir, rl_agents, action_space, board, total_timesteps=50000):
+def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), total_timesteps=50000):
     config = ppo.DEFAULT_CONFIG.copy()
     config['env_config'] = {
         "rl_agents": rl_agents,
-        "proc_agents": [],
+        "proc_agents": proc_agents,
         "board": board,
         "original_board": copy.deepcopy(board),
         "action_space": action_space
@@ -68,16 +68,15 @@ def basic():
     rl_agents = {
         "chad": MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
         "brad": MonsterReinforcementAgent(name="brad", side="home", controlled_player_ind=1),
-        "gamer": MonsterReinforcementAgent(name="gamer", side="home", controlled_player_ind=2),
-        "exksde": MonsterReinforcementAgent(name="exksde", side="away", controlled_player_ind=0),
-        "ligma": MonsterReinforcementAgent(name="ligma", side="away", controlled_player_ind=1),
-        "sugma": MonsterReinforcementAgent(name="sugma", side="away", controlled_player_ind=2)
+        "gamer": MonsterReinforcementAgent(name="gamer", side="home", controlled_player_ind=2)
     }
+
     board = Board(board_type=BoardType.DEFAULT)
 
     train_ppo(
-        save_dir="./models/beta",
+        save_dir="./models/alpha",
         rl_agents=rl_agents,
+        proc_agents=tuple([StrategyAgent(side="away", strategy=RandomAvoidDeath)]),
         action_space=Discrete(5),
         board=board,
         total_timesteps=1000000
@@ -85,7 +84,8 @@ def basic():
 
 
 def load():
-    l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/beta/")
+
+    l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/")
 
     l.update(
         {
@@ -98,8 +98,10 @@ def load():
 
     l.move()
 
+    calc_win_rate(l, RandomAvoidDeath(side="away"))
+
 
 if __name__ == "__main__":
     ray.init(num_gpus=1)
-    # basic()
+    basic()
     load()

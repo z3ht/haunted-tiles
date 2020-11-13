@@ -1,5 +1,7 @@
 from gym import spaces
 
+import time
+
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
 from haunted_tiles.emulator.game import Game, Winner
