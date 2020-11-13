@@ -28,7 +28,7 @@ class Game:
         self.home_strategy = home_strategy
         self.away_strategy = away_strategy
 
-    def play_game(self):
+    def play_game(self, verbose=False):
         """
         Run game loop and get winner
         :return: game winner enum
@@ -37,6 +37,9 @@ class Game:
             self.move_players()
             self.update_board()
             self.update_dead()
+            if verbose:
+                self.display_board()
+
         return self.get_winner()
 
     def move_players(self):
@@ -141,3 +144,40 @@ class Game:
                     'home': [[*plyr.get_location(), plyr.is_dead] for plyr in self.home_players],
                     'away': [[*plyr.get_location(), plyr.is_dead] for plyr in self.away_players],
                     'boardSize': self.board.board_size}
+
+    def display_board(self):
+        game_state = self.get_game_state()
+        board = game_state["tileStatus"]
+
+        # team positions for living players
+        home_positions = []
+        for player in game_state["home"]:
+            if player[2]:
+                home_positions.append(None)
+            else:
+                home_positions.append((player[0], player[1]))
+
+        away_positions = [(player[0], player[1]) for player in game_state["away"] if not player[2]]
+
+        obs = []
+        for y in range(len(board)):
+            health_row = []
+            location_row = []
+            for x in range(len(board[y])):
+                health_data = board[y][x]
+                location_data = 0
+
+                if (x, y) == home_positions[0]:
+                    location_data = 1
+                elif (x, y) in home_positions:
+                    location_data = 2
+                elif (x, y) in away_positions:
+                    location_data = 3
+
+                health_row.append(health_data)
+                location_row.append(location_data)
+
+            obs.append(health_row + location_row)
+        for row in obs:
+            print(row)
+        print("-------")

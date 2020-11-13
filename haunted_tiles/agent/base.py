@@ -66,14 +66,11 @@ class ReinforcementAgent(Agent):
         if not state[self.side][self.controlled_player_inds[0]][2]:
             reward = 1
         else:
-            reward = 0
+            reward = -1
         return reward
 
     def game_end_reward(self, game):
-        if game.get_winner().value == self.side:
-            return 30
-        else:
-            return 0
+        return 0
 
     def format_action(self, raw_action):
         pass

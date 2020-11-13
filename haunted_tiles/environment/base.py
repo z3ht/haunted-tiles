@@ -1,6 +1,7 @@
 from gym import spaces
 
 import time
+import copy
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
@@ -65,7 +66,7 @@ class HauntedTilesEnvironment(MultiAgentEnv):
         self.agents_obs = self._retrieve_agents_obs()
 
     def reset(self):
-        self.board = self.original_board
+        self.board = copy.deepcopy(self.original_board)
         self.game = Game(self.board, Still(side="home"), Still(side="away"), True)
 
         # Call this only after game is up to date

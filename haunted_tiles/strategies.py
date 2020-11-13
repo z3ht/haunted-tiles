@@ -2,6 +2,7 @@ from enum import Enum
 import random
 import numpy as np
 from haunted_tiles.dijkstras import dijkstras
+import copy
 import pickle
 
 from haunted_tiles.environment.mock import mock_obs, mock_format_actions
@@ -64,11 +65,20 @@ class Random(Strategy):
         self.game_state = game_state
 
     def move(self):
-        while True:
-            rand_actions = random.choices(self.actions, k=3)
-            if self._is_valid_moves(rand_actions):
+        actions = []
+        is_done = False
+        for one in self.actions:
+            for two in self.actions:
+                for three in self.actions:
+                    actions = [one, two, three]
+                    if self._is_valid_moves(actions):
+                        is_done = True
+                        break
+                if is_done:
+                    break
+            if is_done:
                 break
-        return rand_actions
+        return actions
 
     def _is_valid_moves(self, moves):
         locations = self.game_state[self.side]
@@ -76,8 +86,8 @@ class Random(Strategy):
             return False
         board = self.game_state['tileStatus']
         for move, location in zip(moves, locations):
-            y = location[0]
-            x = location[1]
+            x = location[0]
+            y = location[1]
             if move == 'north' and (y + 1) >= len(board):
                 return False
             elif move == 'south' and (y - 1) < 0:
@@ -97,35 +107,42 @@ class RandomAvoidDeath(Random):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = self.game_state['tileStatus']
+        board = copy.deepcopy(self.game_state['tileStatus'])
         for move, location in zip(moves, locations):
             x = location[0]
             y = location[1]
             alive = not location[2]
-            if y+1 not in board or y-1 not in board:
-                return False
-            if x+1 not in board[y] or x-1 not in board[y]:
-                return False
             if alive and move == 'north' and board[y+1][x] <= 1:
+                board[y+1][x] -= 1
                 return False
             elif alive and move == 'south' and board[y-1][x] <= 1:
+                board[y - 1][x] -= 1
                 return False
             elif alive and move == 'east' and board[y][x+1] <= 1:
+                board[y][x + 1] -= 1
                 return False
             elif alive and move == 'west' and board[y][x-1] <= 1:
+                board[y][x - 1] -= 1
                 return False
             elif alive and move == 'none' and board[y][x] <= 1:
+                board[y][x] -= 1
                 return False
         return True
 
     def move(self):
-        max_itr = 100
-        itr = 0
-        while True:
-            actions = super().move()
-            if self._is_good_moves(actions) or itr > max_itr:
+        actions = []
+        is_done = False
+        for one in random.sample(self.actions, k=len(self.actions)):
+            for two in random.sample(self.actions, k=len(self.actions)):
+                for three in random.sample(self.actions, k=len(self.actions)):
+                    actions = [one, two, three]
+                    if self._is_valid_moves(actions) and self._is_good_moves(actions):
+                        is_done = True
+                        break
+                if is_done:
+                    break
+            if is_done:
                 break
-            itr += 1
         return actions
 
 

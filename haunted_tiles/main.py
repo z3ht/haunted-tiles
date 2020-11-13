@@ -78,7 +78,10 @@ def move():
     if game_id not in game_cache:
         abort(409)
 
-    return game_cache[game_id].move()
+    try:
+        return game_cache[game_id].move()
+    except:
+        return ['none', 'none', 'none']
 
 
 @app.route('/hello_world', methods=["GET"])

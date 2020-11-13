@@ -15,22 +15,28 @@ from haunted_tiles.emulator.game import Game, Winner
 from haunted_tiles.strategies import RLModel, RandomAvoidDeath, Still
 
 
-def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_trials=1000):
-    wins = [0, 0]
+def calc_win_rate(home_strategy, away_strategy, board_type=BoardType.DEFAULT, n_trials=100):
+    wins = [0, 0, 0]
+    original_board = Board(board_type=board_type)
     for _ in range(n_trials):
-        board = Board(board_type=board_type)
+        board = copy.deepcopy(original_board)
         game = Game(board, home_strategy, away_strategy, True)
-        winner = game.play_game()
+
+        winner = game.play_game(verbose=True)
+        print(winner)
+
         if winner == Winner.HOME:
             wins[0] += 1
-        else:
+        elif winner == Winner.AWAY:
             wins[1] += 1
+        elif winner == winner.TIE:
+            wins[2] += 1
     win_prob = [w / n_trials for w in wins]
     print(win_prob)
 
 
 def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), total_timesteps=50000):
-    config = dqn.DEFAULT_CONFIG.copy()
+    config = ppo.DEFAULT_CONFIG.copy()
     config['env_config'] = {
         "rl_agents": rl_agents,
         "proc_agents": proc_agents,
@@ -38,7 +44,6 @@ def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), tot
         "original_board": copy.deepcopy(board),
         "action_space": action_space
     }
-    config["num_gpus"] = 1
     config["timesteps_per_iteration"] = total_timesteps
     config["num_workers"] = 24
     config["env"] = HauntedTilesEnvironment
@@ -57,10 +62,9 @@ def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), tot
 
     print("Config pickle saved at " + save_dir + "/config.pkl")
 
-    trainer = dqn.DQNTrainer(config=config)
-    for i in range(100):
-        result = trainer.train()
-        print(pretty_print(result))
+    trainer = ppo.PPOTrainer(config=config)
+    result = trainer.train()
+    print(pretty_print(result))
 
     save = trainer.save(save_dir)
     print("model saved at: ", save)
@@ -69,26 +73,26 @@ def train_ppo(save_dir, rl_agents, action_space, board, proc_agents=tuple(), tot
 def basic():
     rl_agents = {
         "chad": MonsterReinforcementAgent(name="chad", side="home", controlled_player_ind=0),
+        "brad": MonsterReinforcementAgent(name="brad", side="home", controlled_player_ind=1),
+        "rad": MonsterReinforcementAgent(name="rad", side="home", controlled_player_ind=2),
     }
 
     board = Board(board_type=BoardType.DEFAULT)
 
     train_ppo(
-        save_dir="./models/beta",
+        save_dir="./models/alpha",
         rl_agents=rl_agents,
         proc_agents=tuple([
-            StrategyAgent(side="away", strategy=RandomAvoidDeath),
-            StrategyAgent(side="home", strategy=Still, controlled_player_inds=[1, 2])
+            StrategyAgent(side="away", strategy=RandomAvoidDeath)
         ]),
         action_space=Discrete(5),
         board=board,
-        total_timesteps=10000
+        total_timesteps=5000000
     )
 
 
 def load():
-
-    l = RLModel(side="home", model_class=dqn.DQNTrainer, model_dir="./models/beta/")
+    l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/")
 
     calc_win_rate(l, RandomAvoidDeath(side="away"))
 
