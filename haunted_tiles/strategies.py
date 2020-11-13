@@ -1,7 +1,5 @@
 from enum import Enum
 import random
-import numpy as np
-from haunted_tiles.dijkstras import dijkstras
 import copy
 import pickle
 
@@ -148,10 +146,19 @@ class RandomAvoidDeath(Random):
 
 class RLModel(Strategy):
 
-    ACTIONS = {
+    # Jank but might work.... we're running out of time here
+    HOME_ACTIONS = {
         (0, 1): 'north',
         (1, 0): 'east',
         (0, -1): 'south',
+        (-1, 0): 'west',
+        (0, 0): 'none'
+    }
+
+    AWAY_ACTIONS = {
+        (0, -1): 'north',
+        (1, 0): 'east',
+        (0, 1): 'south',
         (-1, 0): 'west',
         (0, 0): 'none'
     }
@@ -177,7 +184,10 @@ class RLModel(Strategy):
     def update(self, game_state):
         self.game_state = game_state
 
-        self.obs = mock_obs(self.rl_agents, game_state)
+        if self.side == "away":
+            self.game_state = self.game_state.reverse()
+
+        self.obs = mock_obs(self.rl_agents, self.game_state)
 
     def move(self):
         raw_actions = self.model.compute_actions(self.obs)
@@ -188,7 +198,7 @@ class RLModel(Strategy):
             if self.rl_agents[agent_name].side != self.side:
                 continue
             for player_ind in action:
-                moves[player_ind] = self.ACTIONS[action[player_ind]]
+                moves[player_ind] = self.HOME_ACTIONS[action[player_ind]]
 
         return moves
 
