@@ -60,7 +60,3 @@ def _shortest_path(moves, board, start, end):
         end = best_move
     return path
 
-def patrol_area_no_enemies(dijkstras_matrix):
-    longest_path = None
-    for y in range(7):
-        for x in range(7):

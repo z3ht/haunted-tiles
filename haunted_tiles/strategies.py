@@ -1,7 +1,7 @@
 from enum import Enum
 import random
 import numpy as np
-
+from haunted_tiles.dijkstras import dijkstras
 
 class Side(str, Enum):
     HOME = 'home',
@@ -119,3 +119,82 @@ class ModelGotoBestValid(Strategy):
     def move(self):
         predictions, _state = self.model.predict(self.game_state)
         return [predictions[i] for i in self.move_player_inds]
+
+
+class Wanderer(Strategy):
+    def __init__(self, side, survivor_index=0):
+        super().__init__(side)
+        self.actions = ['north', 'south', 'east', 'west', 'none']
+        self.survivor_index = survivor_index
+
+    def update(self, game_state):
+        self.game_state = game_state
+        board = game_state['tileStates']
+        survivor_position = game_state[self.side][self.survivor_index][:2]
+
+        longest_path = []
+        # find the point that has the largest path to the player
+        for y in range(len(self.game_state['tileStates'][:])):
+            for x in range(len(self.game_state['tileStates'][0])):
+                if self._is_valid_move((x, y)):
+                    new_path = self.find_longest_path((x, y))
+                    end_x, end_y = new_path[-1]
+                if len(new_path) > len(longest_path) and abs(survivor_position[0] - end_x) + abs(survivor_position[1] - end_y) == 1:
+                    longest_path = new_path
+        return longest_path
+
+    def move(self):
+        return ['none', 'none', 'none']
+
+    # find the longest path from a point to the player
+    def find_longest_path(self, end_point):
+        def find_longest_path(end_point, visited, path):
+            visited.add(end_point)
+            if end_point[0] == self.game_state[self.side][self.survivor_index][0] and\
+               end_point[1] == self.game_state[self.side][self.survivor_index][1]:
+                return path
+            path.append(end_point)
+            longest_path = []
+            for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                next_move = end_point[0] + direction[0], end_point[1] + direction[1]
+                if self._is_valid_move(next_move) and next_move not in visited:
+                    new_path = find_longest_path(next_move, visited, path.copy())
+                    if len(new_path) > len(path):
+                        longest_path = new_path
+            if len(longest_path):
+                return longest_path
+            return path
+
+        visited = set()
+        return find_longest_path(end_point, visited, [])
+
+    def _is_valid_move(self, move):
+
+        x, y = move
+        if 0 > x or x >= len(self.game_state['tileStates'][0]):
+            return False
+        if 0 > y or y >= len(self.game_state['tileStates'][:]):
+            return False
+        if self.game_state['tileStates'][y][x] <= 1:
+            return False
+        return True
+
+
+wndr = Wanderer(side=Side.HOME)
+state = {'tileStates': [[3 for i in range(7)] for j in range(7)],
+                   'home': [[0, 0, True]]}
+
+state['tileStates'][0][5] = 0
+state['tileStates'][1][5] = 0
+state['tileStates'][2][5] = 0
+state['tileStates'][3][5] = 0
+state['tileStates'][4][5] = 0
+state['tileStates'][5][5] = 0
+state['tileStates'][6][5] = 0
+
+wndr.game_state = state
+
+print(wndr.find_longest_path((6, 6)))
+
+# print(wndr.update(state))
+#
