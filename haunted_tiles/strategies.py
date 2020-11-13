@@ -97,11 +97,15 @@ class RandomAvoidDeath(Random):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = self.game_state['tileStatus'].board
+        board = self.game_state['tileStatus']
         for move, location in zip(moves, locations):
-            y = location[0]
-            x = location[1]
+            x = location[0]
+            y = location[1]
             alive = not location[2]
+            if y+1 not in board or y-1 not in board:
+                return False
+            if x+1 not in board[y] or x-1 not in board[y]:
+                return False
             if alive and move == 'north' and board[y+1][x] <= 1:
                 return False
             elif alive and move == 'south' and board[y-1][x] <= 1:
@@ -231,21 +235,21 @@ class Wanderer(Strategy):
         return True
 
 
-wndr = Wanderer(side=Side.HOME)
-state = {'tileStates': [[3 for i in range(7)] for j in range(7)],
-                   'home': [[0, 0, True]]}
-
-state['tileStates'][0][5] = 0
-state['tileStates'][1][5] = 0
-state['tileStates'][2][5] = 0
-state['tileStates'][3][5] = 0
-state['tileStates'][4][5] = 0
-state['tileStates'][5][5] = 0
-state['tileStates'][6][5] = 0
-
-wndr.game_state = state
-
-print(wndr.find_longest_path((6, 6)))
-
-# print(wndr.update(state))
+# wndr = Wanderer(side=Side.HOME)
+# state = {'tileStates': [[3 for i in range(7)] for j in range(7)],
+#                    'home': [[0, 0, True]]}
 #
+# state['tileStates'][0][5] = 0
+# state['tileStates'][1][5] = 0
+# state['tileStates'][2][5] = 0
+# state['tileStates'][3][5] = 0
+# state['tileStates'][4][5] = 0
+# state['tileStates'][5][5] = 0
+# state['tileStates'][6][5] = 0
+#
+# wndr.game_state = state
+#
+# print(wndr.find_longest_path((6, 6)))
+#
+# # print(wndr.update(state))
+# #

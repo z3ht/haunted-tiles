@@ -29,47 +29,51 @@ class ReinforcementAgent(Agent):
         board = game_state['tileStatus']
 
         # team positions for living players
+        friend_positions = []
+        for player in game_state[self.side]:
+            if player[2]:
+                friend_positions.append(None)
+            else:
+                friend_positions.append((player[0], player[1]))
+
         foe_side = "away" if self.side == "home" else "home"
-        friend_positions = [(player[0], player[1]) for player in game_state[self.side] if not player[2]]
         foe_positions = [(player[0], player[1]) for player in game_state[foe_side] if not player[2]]
 
         obs = []
         for y in range(len(board)):
             obs_row = []
             for x in range(len(board[y])):
-                if (x, y) in friend_positions:
-                    obs_row.append(4)
+                health_data = board[y][x]
+                location_data = 0
+
+                if (x, y) == friend_positions[self.controlled_player_inds[0]]:
+                    location_data = 1
+                elif (x, y) in friend_positions:
+                    location_data = 2
                 elif (x, y) in foe_positions:
-                    obs_row.append(5)
-                else:
-                    val = board[y][x]
-                    obs_row.append(val)
+                    location_data = 3
+
+                obs_row.append(health_data)
+                obs_row.append(location_data)
+
             obs.append(obs_row)
 
         return obs
 
     def calc_reward(self, game, action):
         state = game.get_game_state()
-        reward = 0
-        if state[self.side][self.controlled_player_inds][2]:
-            reward += 3
+
+        if not state[self.side][self.controlled_player_inds[0]][2]:
+            reward = 1
         else:
-            reward -= 3
-        foe = 'home' if self.side == 'away' else 'away'
-
-        num_enemies_alive = 0
-        for enemies in state[foe]:
-            for enemy in enemies:
-                if enemy[2]:
-                    num_enemies_alive += 1
-
-        return reward - max(num_enemies_alive, 2)
+            reward = 0
+        return reward
 
     def game_end_reward(self, game):
         if game.get_winner().value == self.side:
-            return 1000
+            return 30
         else:
-            return -1000
+            return 0
 
     def format_action(self, raw_action):
         pass
