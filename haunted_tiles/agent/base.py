@@ -71,7 +71,12 @@ class ReinforcementAgent(Agent):
         return reward
 
     def game_end_reward(self, game):
-        return 0
+        if game.get_winner().value == self.side:
+            return 5
+        elif game.get_winner().value == "tie":
+            return 0
+        else:
+            return -5
 
     def format_action(self, raw_action):
         pass
