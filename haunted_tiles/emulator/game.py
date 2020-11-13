@@ -28,7 +28,7 @@ class Game:
         self.home_strategy = home_strategy
         self.away_strategy = away_strategy
 
-    def play_game(self):
+    def play_game(self, verbose=False):
         """
         Run game loop and get winner
         :return: game winner enum
@@ -37,6 +37,13 @@ class Game:
             self.move_players()
             self.update_board()
             self.update_dead()
+
+        if verbose:
+            print('home:', [player.get_location() for player in self.home_players])
+            print('away:', [player.get_location() for player in self.away_players])
+            for row in self.board.board:
+                print(row)
+
         return self.get_winner()
 
     def move_players(self):
@@ -132,12 +139,12 @@ class Game:
         :return: same format as described in preprocessing.format_game_state
         """
         if not self.return_dead:
-            return {'tileStatus': self.board.board,
+            return {'tileStates': self.board.board,
                     'home': [plyr.get_location() for plyr in self.home_players if not plyr.is_dead],
                     'away': [plyr.get_location() for plyr in self.away_players if not plyr.is_dead],
                     'boardSize': self.board.board_size}
         else:
-            return {'tileStatus': self.board.board,
+            return {'tileStates': self.board.board,
                     'home': [[*plyr.get_location(), plyr.is_dead] for plyr in self.home_players],
                     'away': [[*plyr.get_location(), plyr.is_dead] for plyr in self.away_players],
                     'boardSize': self.board.board_size}

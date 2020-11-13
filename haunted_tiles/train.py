@@ -79,7 +79,7 @@ def basic():
         proc_agents=tuple([StrategyAgent(side="away", strategy=RandomAvoidDeath)]),
         action_space=Discrete(5),
         board=board,
-        total_timesteps=1000000
+        total_timesteps=100000
     )
 
 

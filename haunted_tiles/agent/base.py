@@ -51,25 +51,17 @@ class ReinforcementAgent(Agent):
     def calc_reward(self, game, action):
         state = game.get_game_state()
         reward = 0
-        if state[self.side][self.controlled_player_inds][2]:
-            reward += 3
+        if state[self.side][self.controlled_player_inds[0]][2]:
+            reward += 2
         else:
-            reward -= 3
-        foe = 'home' if self.side == 'away' else 'away'
-
-        num_enemies_alive = 0
-        for enemies in state[foe]:
-            for enemy in enemies:
-                if enemy[2]:
-                    num_enemies_alive += 1
-
-        return reward - max(num_enemies_alive, 2)
+            reward -= 1
+        return reward
 
     def game_end_reward(self, game):
         if game.get_winner().value == self.side:
-            return 1000
+            return 10
         else:
-            return -1000
+            return -10
 
     def format_action(self, raw_action):
         pass
