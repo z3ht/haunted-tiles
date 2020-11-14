@@ -5,7 +5,7 @@ const request = new XMLHttpRequest();
 
 const baseUrl = "https://localhost:8421";
 const apiToken = "ep1c-t0ken";
-const strategy = "hail-mary";
+const strategy = "deep-mind-v2";
 let gameId = undefined;
 
 function main(gameState, side){

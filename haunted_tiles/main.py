@@ -36,7 +36,8 @@ def create_game():
     available_strategies = {
         "basic": strategies.Basic,
         'hourglass': strategies.Hourglass,
-        'hail-mary': strategies.RandomAvoidDeath
+        'hail-mary': strategies.RandomAvoidDeath,
+        'deep-mind-v2': strategies.DeepMindV2
     }
 
     side = format_string(request.args["Side"])

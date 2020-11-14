@@ -26,7 +26,7 @@ class ReinforcementAgent(Agent):
         self.name = name
 
     def interpret_game_state(self, game_state):
-        board = game_state['tileStatus']
+        board = game_state['tileStates']
 
         # team positions for living players
         friend_positions = []

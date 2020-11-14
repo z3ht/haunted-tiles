@@ -115,13 +115,13 @@ def basic():
 
 
 def load():
-    l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/")
+    l = RLModel(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/", checkpoint="checkpoint_2/checkpoint-2")
 
     calc_win_rate(l, RandomAvoidDeath(side="away"))
 
 
 if __name__ == "__main__":
     ray.init(num_gpus=1)
-    basic()
+    # basic()
     # load_train(model_dir="./models/alpha", model_class=ppo.PPOTrainer, total_timesteps=20000000)
     load()

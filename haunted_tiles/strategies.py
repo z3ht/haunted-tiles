@@ -4,6 +4,8 @@ import copy
 import pickle
 import os
 
+from ray.rllib.agents.ppo import ppo
+
 from haunted_tiles.environment.mock import mock_obs, mock_format_actions
 
 
@@ -251,6 +253,13 @@ class RLModel(Strategy):
                 moves[player_ind] = self.HOME_ACTIONS[action[player_ind]]
 
         return moves
+
+
+class DeepMindV2(RLModel):
+
+    def __init__(self):
+        super().__init__(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/",
+                         checkpoint="checkpoint_2/checkpoint-2")
 
 
 class Wanderer(Strategy):
