@@ -68,7 +68,7 @@ def update():
                 abort(400)
 
         game_id = format_string(request.args["Game-Id"])
-        game_state = format_game_state(request.args["Game-State"].lower())
+        game_state = format_game_state(request.args["Game-State"].lower(), include_dead_state=True)
 
         if game_id not in game_cache:
             abort(400)

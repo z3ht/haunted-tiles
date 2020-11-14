@@ -2,6 +2,7 @@ from enum import Enum
 import random
 import copy
 import pickle
+import os
 
 from haunted_tiles.environment.mock import mock_obs, mock_format_actions
 
