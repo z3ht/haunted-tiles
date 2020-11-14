@@ -5,7 +5,7 @@ const request = new XMLHttpRequest();
 
 const baseUrl = "https://haunted-tiles.xyz"
 const apiToken = "ep1c-t0ken";
-const strategy = "basic";
+const strategy = "hourglass";
 let gameId = undefined;
 
 function main(gameState, side){
