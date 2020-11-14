@@ -257,8 +257,8 @@ class RLModel(Strategy):
 
 class DeepMindV2(RLModel):
 
-    def __init__(self):
-        super().__init__(side="home", model_class=ppo.PPOTrainer, model_dir="./models/alpha/",
+    def __init__(self, side):
+        super().__init__(side=side, model_class=ppo.PPOTrainer, model_dir="./models/alpha/",
                          checkpoint="checkpoint_2/checkpoint-2")
 
 

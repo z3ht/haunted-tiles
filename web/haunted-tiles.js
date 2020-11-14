@@ -3,9 +3,9 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const request = new XMLHttpRequest();
 
-const baseUrl = "https://haunted-tiles.xyz";
+const baseUrl = "https://localhost:8421";
 const apiToken = "ep1c-t0ken";
-const strategy = "deep-mind-v2";
+const strategy = "hail-mary";
 let gameId = undefined;
 
 function main(gameState, side){
