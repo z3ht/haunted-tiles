@@ -3,7 +3,7 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const request = new XMLHttpRequest();
 
-const baseUrl = "https://haunted-tiles.xyz"
+const baseUrl = "https://localhost:8421";
 const apiToken = "ep1c-t0ken";
 const strategy = "hail-mary";
 let gameId = undefined;
@@ -21,8 +21,6 @@ function main(gameState, side){
     request.send(null);
     gameId = request.responseText;
   }
-
-  console.log(gameId);
 
   const args = "&Game-Id=" + gameId + "&Game-State=" + json_gameState;
   request.open('POST', baseUrl + "/update?" + token + args, false);

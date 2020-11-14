@@ -19,10 +19,10 @@ def format_game_state(game_state, include_dead_state=False):
                 'boardSize': game_state['boardSize']}
 
     else:
-        return {'tileStates': game_state['tileStates'],
-                'home': [[*plyr['coord'], plyr['isDead']] for plyr in game_state['teamStates']['home']],
-                'away': [[*plyr['coord'], plyr['isDead']] for plyr in game_state['teamStates']['away']],
-                'boardSize': game_state['boardSize']}
+        return {'tileStates': game_state['tilestates'],
+                'home': [[*plyr['coord'], plyr['isdead']] for plyr in game_state['teamstates']['home']],
+                'away': [[*plyr['coord'], plyr['isdead']] for plyr in game_state['teamstates']['away']],
+                'boardSize': game_state['boardsize']}
 
 
 def format_string(side):

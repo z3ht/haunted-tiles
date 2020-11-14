@@ -74,6 +74,8 @@ def update():
 
     game_cache[game_id].update(game_state=game_state)
 
+    return "Done"
+
 
 @app.route('/move', methods=["GET"])
 @return_json

@@ -83,7 +83,7 @@ class Random(Strategy):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = self.game_state['tileStatus']
+        board = self.game_state['tileStates']
         for move, location in zip(moves, locations):
             x = location[0]
             y = location[1]
@@ -106,7 +106,7 @@ class RandomAvoidDeath(Random):
         locations = self.game_state[self.side]
         if len(moves) != 3:
             return False
-        board = copy.deepcopy(self.game_state['tileStatus'])
+        board = copy.deepcopy(self.game_state['tileStates'])
         for move, location in zip(moves, locations):
             x = location[0]
             y = location[1]
