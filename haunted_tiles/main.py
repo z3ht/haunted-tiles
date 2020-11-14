@@ -62,20 +62,17 @@ def create_game():
 
 @app.route('/update', methods=["POST"])
 def update():
-    try:
-        for item in ["Game-Id", "Game-State"]:
-            if item not in request.args:
-                abort(400)
-
-        game_id = format_string(request.args["Game-Id"])
-        game_state = format_game_state(request.args["Game-State"].lower(), include_dead_state=True)
-
-        if game_id not in game_cache:
+    for item in ["Game-Id", "Game-State"]:
+        if item not in request.args:
             abort(400)
 
-        game_cache[game_id].update(game_state=game_state)
-    except:
-        print("NOPE NOT TODAY")
+    game_id = format_string(request.args["Game-Id"])
+    game_state = format_game_state(request.args["Game-State"].lower(), include_dead_state=True)
+
+    if game_id not in game_cache:
+        abort(400)
+
+    game_cache[game_id].update(game_state=game_state)
 
 
 @app.route('/move', methods=["GET"])
@@ -89,10 +86,7 @@ def move():
     if game_id not in game_cache:
         abort(409)
 
-    try:
-        return game_cache[game_id].move()
-    except:
-        return ['none', 'none', 'none']
+    return game_cache[game_id].move()
 
 
 @app.route('/hello_world', methods=["GET"])
